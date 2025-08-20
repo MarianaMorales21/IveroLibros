@@ -1,0 +1,263 @@
+/* Estilos generales */
+body {
+  font-family: 'Roboto', sans-serif; /* Cambiado a tipografía Roboto */
+  color: #4A4A4A; /* Color de texto más oscuro */
+}
+
+/* Navbar */
+.navbar-color{
+  background-color: #FDF5E6; /* Color marrón oscuro */
+}
+
+/* Titulo */
+.title-color {
+  color: #884615; /*Titulo principal marron*/
+}
+.title-color-2 {
+  color: #000000ff; /* Titulo secundario negro */
+}
+
+/* Estilos de Botones */
+.btn-primary {
+  background-color: #884615;
+  color: white;
+  border-color: #884615;
+}
+
+.btn-primary:hover {
+  background-color: #6d3205ff;
+  color: white;
+  border-color: #6d3205ff;
+}
+
+.btn-outline-primary {
+  color: #884615;
+  border-color: #884615;
+}
+
+.btn-outline-primary:hover {
+  background-color: #472103ff;
+  color: white;
+  border-color: #884615;
+}
+
+/* Logo */
+  .bg-brown {
+    background-color: #884615; /* mismo color que pediste */
+  }
+  .text-brown {
+    color: #884615;
+  }
+
+/* Estilo para las columnas de enlaces */
+.footer-links h6 {
+  font-size: 1.1rem; /* Tamaño para los títulos de las columnas */
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.footer-links ul {
+  padding-left: 0;
+}
+
+.footer-links li {
+  margin-bottom: 5px;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem; /* Tamaño para los enlaces */
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #d1d1d1; /* Un color ligeramente diferente al pasar el mouse */
+}
+
+/* Estilos específicos para los enlaces legales, que son de color azul en la imagen */
+.legal-link {
+  color: #90b3e6 !important;
+}
+
+.legal-link:hover {
+  color: #80a3c6 !important;
+}
+
+/* Estilo para la línea de copyright en la parte inferior */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.footer-bottom small {
+  font-size: 0.8rem;
+}
+
+
+
+/* Estilos del Navbar y Footer */
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important; /* Suavizado de sombra */
+}
+
+.footer {
+  background-color: #884615; /* Color más claro para el footer */
+}
+
+.footer .nav-link {
+  color: white !important; /* Color de texto más suave */
+  transition: color 0.3s;
+}
+
+.footer .nav-link:hover {
+  color: black !important; /* Color de hover del enlace */
+}
+
+/* Estilos de HomePage.js */
+
+.card {
+  background-color: #F4F4DA; /* Color de fondo más claro */
+  border: none;
+}
+
+.hero-section {
+  background-color: #F4F4DA; /* Color de fondo más claro */
+}
+
+.img-container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.card-img-container {
+  display: flex;
+  justify-content: center;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 10px; /* Espacio superior para la imagen */
+  margin-bottom: 10px;
+  border-radius: 0.5rem; /* Bordes redondeados */
+  overflow: hidden; /* Para que la imagen no sobresalga */
+  border: 4px solid #884615; /* Borde más suave */
+}
+
+/* Opcional, para la alineación vertical */
+.card-img-container {
+  align-items: center;
+}
+
+/* La imagen sigue teniendo sus propias propiedades */
+.card-img-top {
+  width: 95%;
+  height: 400px;
+  margin-top: 10px; /* Espacio superior para la imagen */
+  margin-bottom: 10px; /* Espacio inferior para la imagen */
+}
+
+.join-section {
+  background-color: #F4F4DA; /* Color más claro */
+}
+
+
+/* Estilos de ForumsPage.js */
+.forums-page .card {
+  border: 2px solid #884615; /* Borde más suave */
+}
+
+.forums-page .card-body h5 {
+  color: #884615; /* Color del título más fuerte */
+}
+
+.title-color-section {
+  background-color: #FDF5E6; 
+  border: 2px solid #FDF5E6;
+}
+
+.title-forums-margin {
+  margin-top: 1%;
+}
+
+.button-forums-margin {
+  margin-bottom: 2%;
+}
+
+.title-forums-2{
+  margin-left:5%;
+  margin-top: 1.5%;
+  color: #884615; /* Color marrón oscuro */
+}
+
+/* Estilos de CreatePostPage.js */
+.create-post-page .form-control {
+  border-radius: 0.5rem;
+}
+
+.create-post-page .list-unstyled {
+  list-style: none;
+  padding: 0;
+}
+
+.create-post-Row {
+  background-color:  #FDF5E6; /* Color de fondo más claro */
+  border-radius: 15px;
+}
+
+.form{
+  margin-top: 4%;
+  margin-bottom: 4%;
+}
+
+.post-forum{
+  background-color: #F4F7F4; /* Color de fondo más claro */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #884615; /* Borde más suave */
+}
+
+/* Estilos de RegisterPage.js */
+.register-page .form-control {
+  border-radius: 0.5rem;
+  background-color: #F4F7F4;
+  border: 1px solid #E1E1E1; /* Borde más suave */
+}
+
+/* Estilos de LoginPage.js */
+.login-page .form-control {
+  border-radius: 0.5rem;
+  background-color: #F4F7F4;
+  border: 1px solid #E1E1E1; /* Borde más suave */
+}
+
+/* Estilos de FeaturedBooksPage.js */
+.featured-books-page .card {
+  border: 1px solid #E1E1E1;
+  transition: transform 0.2s;
+}
+
+.featured-books-page .card:hover {
+  transform: translateY(-5px);
+}
+
+.featured-books-page .card-img-top {
+  object-fit: cover;
+  height: 300px;
+}
+
+.filter{
+  background-color: #F4F7F4; /* Color de fondo más claro */
+  border-radius: 0.5rem;
+  border: 1px solid #884615;
+}
+
+/* Estilos de BookDetailsPage.js */
+.book-details-page .list-unstyled li {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .hero-section .img-container {
+    margin-top: 2rem;
+  }
+}
