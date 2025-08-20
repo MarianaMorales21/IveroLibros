@@ -1,9 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
 
-
-const FeaturedBooksPage = ( {setCurrentPage} ) => {
-
+const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
   const books = [
     {
       id: 1,
@@ -65,22 +63,30 @@ const FeaturedBooksPage = ( {setCurrentPage} ) => {
         </Row>
 
         <Row className="g-4">
-      {books.map(book => (
-        <Col xs={12} sm={6} md={4} lg={3} key={book.id}>
-          <Card className="h-100 shadow-sm custom-card">
-            <Card.Img variant="top" src={book.image} alt={book.alt} />
-            <Card.Body>
-              <Card.Title>{book.title}</Card.Title>
-              <Card.Text className="text-muted">{book.description}</Card.Text>
-              <div className="d-grid gap-2">
-                <Button variant="primary">Comprar</Button>
-                <Button variant="outline-primary" onClick={() => setCurrentPage('book-details')}>Reseña</Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
+          {books.map(book => (
+            <Col xs={12} sm={6} md={4} lg={3} key={book.id}>
+              <Card className="h-100 shadow-sm custom-card">
+                <Card.Img variant="top" src={book.image} alt={book.alt} />
+                <Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <Card.Text className="text-muted">{book.description}</Card.Text>
+                  <div className="d-grid gap-2">
+                    <Button variant="primary">Comprar</Button>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => {
+                        setSelectedBook(book);
+                        setCurrentPage('book-details');
+                      }}
+                    >
+                      Reseña
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </Container>
     </div>
   );

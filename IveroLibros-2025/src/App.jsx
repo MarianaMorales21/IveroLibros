@@ -13,11 +13,12 @@ import BookDetailsPage from './pages/booksDetails';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [selectedBook, setSelectedBook] = useState(null); // Nuevo estado
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage />;
+        return <HomePage setCurrentPage={setCurrentPage} />;
       case 'forums':
         return <ForumsPage setCurrentPage={setCurrentPage} />;
       case 'create-post':
@@ -27,9 +28,19 @@ function App() {
       case 'login':
         return <LoginPage />;
       case 'featured-books':
-        return <FeaturedBooksPage />;
+        return (
+          <FeaturedBooksPage
+            setCurrentPage={setCurrentPage}
+            setSelectedBook={setSelectedBook}
+          />
+        );
       case 'book-details':
-        return <BookDetailsPage />;
+        return (
+          <BookDetailsPage
+            book={selectedBook}
+            setCurrentPage={setCurrentPage}
+          />
+        );
       default:
         return <HomePage />;
     }

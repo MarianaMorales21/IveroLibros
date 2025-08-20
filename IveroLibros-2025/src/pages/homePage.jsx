@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 
-const MainContent = () => {
+const MainContent = ({setCurrentPage}) => {
   return (
     <>
       {/* Sección Hero */}
@@ -18,7 +18,13 @@ const MainContent = () => {
                 Únete a IveroLibros, donde autores y lectores se encuentran para compartir pasiones, descubrir nuevos títulos y promocionar obras literarias en un ambiente acogedor y profesional.
               </p>
               <div className="mt-4">
-                <Button variant="primary" className="me-2">Explora el foro</Button>
+                <Button
+                  variant="primary"
+                  className="me-2"
+                  onClick={() => setCurrentPage('forums')}
+                >
+                  Explora el foro
+                </Button>
                 <Button variant="outline-primary">Promociona tu libro</Button>
               </div>
             </Col>

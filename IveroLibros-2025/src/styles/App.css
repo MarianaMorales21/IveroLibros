@@ -9,6 +9,22 @@ body {
   background-color: #FDF5E6; /* Color marrón oscuro */
 }
 
+.navbar-style {
+  color: #000000; /* Color oscuro por defecto */
+  font-size: 1rem;
+  transition: color 0.2s ease-in-out; /* Opcional, pero recomendado para un cambio suave */
+}
+
+/* Cambia el color cuando el enlace está enfocado (con teclado) o se le pasa el mouse por encima */
+.navbar-style:hover, .navbar-style:focus {
+  color: #884615; /* Un color de acento para la interacción */
+}
+
+/* Cambia el color de la letra cuando se hace clic en ella (se hunde) */
+.navbar-style:active {
+  color: #552d0f; /* Un color más oscuro para el efecto de "hundido" */
+}
+
 /* Titulo */
 .title-color {
   color: #884615; /*Titulo principal marron*/
@@ -25,20 +41,20 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #6d3205ff;
-  color: white;
-  border-color: #6d3205ff;
+  background-color: #6d3205ff !important;
+  color: white !important;
+  border-color: #6d3205ff !important;
 }
 
 .btn-outline-primary {
-  color: #884615;
-  border-color: #884615;
+  color: #884615 !important;
+  border-color: #884615 !important;
 }
 
 .btn-outline-primary:hover {
-  background-color: #472103ff;
-  color: white;
-  border-color: #884615;
+  background-color: #472103ff !important;
+  color: white !important;
+  border-color: #884615 !important;
 }
 
 /* Logo */
@@ -253,6 +269,53 @@ body {
 /* Estilos de BookDetailsPage.js */
 .book-details-page .list-unstyled li {
   margin-bottom: 0.5rem;
+  font-size: 20px;
+}
+
+.book-details-page p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #4A4A4A; /* Color de texto más oscuro */
+}
+
+.book-details-page .card {
+  border: 1px solid #E1E1E1;
+  border-radius: 0.5rem;
+  margin-top: none;
+}
+
+.book-details-page img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.title-book-details {
+  margin-top: none;
+  font-size: 45px;
+}
+
+/*Estilo de Inicio de sesion y Registarse*/
+.login-page img{
+  width: 200px; /* Ajusta el tamaño de la imagen según sea necesario */
+  height: auto; /* Mantiene la proporción de la image*/
+}
+
+.form-control-login {
+  background-color: #F3F3D9 !important; /* Color de fondo más claro */
+  border-radius: 0.5rem;
+  border: 2px solid #884615 !important; /* Borde más suave */
+  color: #884615 !important; /* Color de texto más oscuro */
+}
+
+.form-control-login:focus {
+  border-color: #884615; /* El color que deseas para el borde */
+  box-shadow: 0 0 0 0.25rem rgba(136, 70, 21, 0.25); /* Un resplandor sutil del mismo color */
+}
+
+.register-page img{
+  width: 200px; /* Ajusta el tamaño de la imagen según sea necesario */
+  height: auto; /* Mantiene la proporción de la image*/
 }
 
 /* Responsive adjustments */

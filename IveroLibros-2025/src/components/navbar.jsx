@@ -1,30 +1,69 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { BiHome, BiBookOpen, BiGroup, BiStar, BiNews } from 'react-icons/bi';
 
-const MyNavbar = ({ setCurrentPage }) => {
+const MyNavbar = ({ currentPage, setCurrentPage }) => {
   return (
-    <Navbar expand="lg" className="py-3 shadow-sm " >
+    <Navbar expand="lg" className="py-3 shadow-sm">
       <Container>
         <Navbar.Brand href="#" onClick={() => setCurrentPage('home')}>
           <div className="d-flex align-items-center">
             <div className="bg-brown text-white p-2 rounded">
               <i className="bi bi-book"></i>
             </div>
-            <span class="ms-2 fw-bold text-brown">IveroLibros</span>
+            <span className="ms-2 fw-bold text-brown">IveroLibros</span>
           </div>
-
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link onClick={() => setCurrentPage('home')}>Inicio</Nav.Link>
-            <Nav.Link onClick={() => setCurrentPage('forums')}>Foros</Nav.Link>
-            <Nav.Link onClick={() => setCurrentPage('featured-books')}>Libros Destacados</Nav.Link>
-            <Nav.Link href="#">Promocionar Libro</Nav.Link>
-            <Nav.Link href="#">Noticias</Nav.Link>
+            {/* Inicio */}
+            <Nav.Link
+              className={`navbar-style ${currentPage === 'home' ? 'active-link' : ''}`}
+              onClick={() => setCurrentPage('home')}
+            >
+              <BiHome className="me-1" /> Inicio
+            </Nav.Link>
+
+            {/* Foros */}
+            <Nav.Link
+              className={`navbar-style ${currentPage === 'forums' ? 'active-link' : ''}`}
+              onClick={() => setCurrentPage('forums')}
+            >
+              <BiGroup className="me-1" /> Foros
+            </Nav.Link>
+
+            {/* Libros Destacados */}
+            <Nav.Link
+              className={`navbar-style ${currentPage === 'featured-books' ? 'active-link' : ''}`}
+              onClick={() => setCurrentPage('featured-books')}
+            >
+              <BiBookOpen className="me-1" /> Libros Destacados
+            </Nav.Link>
+
+            {/* Promocionar Libro */}
+            <Nav.Link
+              className={`navbar-style ${currentPage === 'promote-book' ? 'active-link' : ''}`}
+              onClick={() => setCurrentPage('promote-book')}
+            >
+              <BiStar className="me-1" /> Promocionar Libro
+            </Nav.Link>
+
+            {/* Noticias */}
+            <Nav.Link
+              className={`navbar-style ${currentPage === 'news' ? 'active-link' : ''}`}
+              onClick={() => setCurrentPage('news')}
+            >
+              <BiNews className="me-1" /> Noticias
+            </Nav.Link>
           </Nav>
-          <Button variant="primary" className="ms-2" onClick={() => setCurrentPage('login')}>Iniciar Sesión</Button>
-          <Button variant="outline-primary" className="ms-2" onClick={() => setCurrentPage('register')}>Registrarse</Button>
+
+          <Button variant="primary" className="ms-2" onClick={() => setCurrentPage('login')}>
+            Iniciar Sesión
+          </Button>
+          <Button variant="outline-primary" className="ms-2" onClick={() => setCurrentPage('register')}>
+            Registrarse
+          </Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
