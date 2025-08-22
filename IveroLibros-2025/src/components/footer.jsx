@@ -32,7 +32,6 @@ const Footer = () => {
                   <Nav.Link href="#" className="text-white p-0 mb-2">Foro</Nav.Link>
                   <Nav.Link href="#" className="text-white p-0 mb-2">Libros Destacados</Nav.Link>
                   <Nav.Link href="#" className="text-white p-0 mb-2">Promocionar Libro</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Noticias</Nav.Link>
                 </Nav>
               </Col>
               <Col sm={4}>

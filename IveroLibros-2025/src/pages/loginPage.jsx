@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-const LoginPage = () => {
+const LoginPage = ({ setCurrentPage }) => {
   return (
     <div className="login-page py-5">
       <Container>
@@ -14,19 +14,19 @@ const LoginPage = () => {
           <Col md={6}>
             <Form className="p-4 shadow-sm">
               <Form.Group className="mb-3">
-                <Form.Label className="title-color">Usuario</Form.Label>
-                <Form.Control className="form-control-login" type="text" placeholder="Jane Smith" />
+                <Form.Label className="title-color-2">Email</Form.Label>
+                <Form.Control className="form-control-login" type="email" placeholder="Jane@gmail.com" />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label className="title-color">Contraseña</Form.Label>
+                <Form.Label className="title-color-2">Contraseña</Form.Label>
                 <Form.Control className='form-control-login' type="password" placeholder="********" />
               </Form.Group>
               <div className="d-grid gap-2 mt-4">
                 <Button variant="primary" size="lg">Inicia Sesion</Button>
-                <Button variant="outline-primary" size="lg">Registrarse</Button>
+                <Button variant="outline-primary" size="lg" onClick={() => setCurrentPage('register')}>Registrarse</Button>
               </div>
               <div className="text-center mt-3">
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a className="register-login">¿Olvidaste tu contraseña?</a>
               </div>
             </Form>
           </Col>

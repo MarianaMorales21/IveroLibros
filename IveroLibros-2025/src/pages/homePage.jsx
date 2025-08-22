@@ -79,7 +79,7 @@ const MainContent = ({setCurrentPage}) => {
               <p>
                 Más de 5,000 lectores ya forman parte de nuestra comunidad ••••• 4.9/5
               </p>
-              <Button variant="primary">Ir al Registro</Button>
+              <Button variant="primary" onClick={() => setCurrentPage('register')}>Ir al Registro</Button>
             </Col>
             <Col lg={6} className="text-center text-lg-end">
               <blockquote className="blockquote">

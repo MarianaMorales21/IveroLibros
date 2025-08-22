@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 
-const RegisterPage = () => {
+const RegisterPage = ({ setCurrentPage }) => {
   return (
     <div className="register-page py-5">
       <Container>
@@ -17,47 +17,39 @@ const RegisterPage = () => {
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="title-color">Nombre</Form.Label>
+                    <Form.Label className="title-color-2">Nombre</Form.Label>
                     <Form.Control className="form-control-login" type="text" placeholder="Jane" />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label className="title-color">Apellido</Form.Label>
+                    <Form.Label className="title-color-2">Apellido</Form.Label>
                     <Form.Control className="form-control-login" type="text" placeholder="Smith" />
                   </Form.Group>
                 </Col>
               </Row>
               <Form.Group className="mb-3">
-                <Form.Label className="title-color">Usuario</Form.Label>
-                <Form.Control className="form-control-login" type="text" placeholder="Jane Smith" />
+                <Form.Label className="title-color-2">Correo</Form.Label>
+                <Form.Control className="form-control-login" type="email" placeholder="Jane@gmail.com" />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label className="title-color">Teléfono</Form.Label>
-                <Form.Control className="form-control-login" type="tel" placeholder="+58 0412364587" />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="title-color">Correo</Form.Label>
-                <Form.Control className="form-control-login" type="email" placeholder="Jane@framer.com" />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Contraseña</Form.Label>
+                <Form.Label className="title-color-2">Contraseña</Form.Label>
                 <Form.Control className="form-control-login" type="password" placeholder="*****" />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label className="title-color">Confirmar Contraseña</Form.Label>
+                <Form.Label className="title-color-2">Confirmar Contraseña</Form.Label>
                 <Form.Control className="form-control-login" type="password" placeholder="*****" />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check  type="checkbox" label="Acepto los Términos y Condiciones y la Política de Privacidad" />
+                <Form.Check type="checkbox" label="Acepto los Términos y Condiciones y la Política de Privacidad" />
               </Form.Group>
 
               <Button variant="primary" type="submit" className="w-100">
                 Crear Cuenta
               </Button>
               <div className="text-center mt-3">
-                ¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a>
+                ¿Ya tienes una cuenta? <a onClick={() => setCurrentPage('login')} className="register-login">Inicia sesión aquí</a>
               </div>
             </Form>
           </Col>

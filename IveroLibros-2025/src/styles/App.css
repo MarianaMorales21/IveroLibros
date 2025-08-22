@@ -6,13 +6,14 @@ body {
 
 /* Navbar */
 .navbar-color{
-  background-color: #FDF5E6; /* Color marrón oscuro */
+  background-color: #f7f7ebff; /* Color marrón oscuro */
 }
 
 .navbar-style {
   color: #000000; /* Color oscuro por defecto */
   font-size: 1rem;
   transition: color 0.2s ease-in-out; /* Opcional, pero recomendado para un cambio suave */
+
 }
 
 /* Cambia el color cuando el enlace está enfocado (con teclado) o se le pasa el mouse por encima */
@@ -52,10 +53,21 @@ body {
 }
 
 .btn-outline-primary:hover {
-  background-color: #472103ff !important;
+  background-color: #6d3205ff !important;
   color: white !important;
   border-color: #884615 !important;
 }
+
+.btn-danger-primary{
+  background-color: #ce0000ff;
+  color: white;
+}
+
+.btn-danger-primary:hover{
+  background-color: #ff0000ff;
+  color: white;
+}
+
 
 /* Logo */
   .bg-brown {
@@ -158,6 +170,10 @@ body {
   border: 4px solid #884615; /* Borde más suave */
 }
 
+.content-section{
+  background-color: #F4F4DA;
+}
+
 /* Opcional, para la alineación vertical */
 .card-img-container {
   align-items: center;
@@ -175,19 +191,27 @@ body {
   background-color: #F4F4DA; /* Color más claro */
 }
 
-
 /* Estilos de ForumsPage.js */
+.forums-page{
+  background-color: #F4F4DA;
+}
+
 .forums-page .card {
   border: 2px solid #884615; /* Borde más suave */
 }
 
 .forums-page .card-body h5 {
   color: #884615; /* Color del título más fuerte */
+  cursor: pointer;
+}
+
+.forums-page .card-body h5:hover{
+  color: #502605ff; /* Color del título más fuerte */
+  cursor: pointer;
 }
 
 .title-color-section {
-  background-color: #FDF5E6; 
-  border: 2px solid #FDF5E6;
+  background-color: #fff3ddff; 
 }
 
 .title-forums-margin {
@@ -205,6 +229,10 @@ body {
 }
 
 /* Estilos de CreatePostPage.js */
+.create-post-page{
+  background-color: #F4F4DA;
+}
+
 .create-post-page .form-control {
   border-radius: 0.5rem;
 }
@@ -214,21 +242,30 @@ body {
   padding: 0;
 }
 
-.create-post-Row {
-  background-color:  #FDF5E6; /* Color de fondo más claro */
-  border-radius: 15px;
-}
-
 .form{
   margin-top: 4%;
   margin-bottom: 4%;
 }
 
+/* Estilo para el área de texto del foro */
+.forum-textarea {
+  background-color: #f7f3e8; /* El mismo color de fondo de las tarjetas */
+  border-color: #884615;
+}
+
+/* Estilo para el botón de enviar respuesta */
+.btn-send-response {
+  background-color: #884615;
+  border-color: #884615;
+  color: white;
+  white-space: nowrap; /* Evita que el texto del botón se salte de línea */
+}
+
 .post-forum{
-  background-color: #F4F7F4; /* Color de fondo más claro */
+  background-color: #F3F3D9 !important; /* Color de fondo más claro */
   border-radius: 0.5rem;
-  padding: 1rem;
-  border: 1px solid #884615; /* Borde más suave */
+  border: 2px solid #884615 !important; /* Borde más suave */
+  color: #884615 !important; /* Color de texto más oscuro *//* Borde más suave */
 }
 
 /* Estilos de RegisterPage.js */
@@ -246,6 +283,10 @@ body {
 }
 
 /* Estilos de FeaturedBooksPage.js */
+.featured-books-page{
+  background-color: #F4F4DA;
+}
+
 .featured-books-page .card {
   border: 1px solid #E1E1E1;
   transition: transform 0.2s;
@@ -258,7 +299,10 @@ body {
 .featured-books-page .card-img-top {
   object-fit: cover;
   height: 300px;
+  margin-left: 2.8%;
+  border-radius: 10px;
 }
+
 
 .filter{
   background-color: #F4F7F4; /* Color de fondo más claro */
@@ -267,6 +311,10 @@ body {
 }
 
 /* Estilos de BookDetailsPage.js */
+.book-details-page{
+  background-color: #F4F4DA;
+}
+
 .book-details-page .list-unstyled li {
   margin-bottom: 0.5rem;
   font-size: 20px;
@@ -296,6 +344,14 @@ body {
 }
 
 /*Estilo de Inicio de sesion y Registarse*/
+.login-page{
+  background-color: #F4F4DA;
+}
+
+.register-page{
+  background-color: #F4F4DA;
+}
+
 .login-page img{
   width: 200px; /* Ajusta el tamaño de la imagen según sea necesario */
   height: auto; /* Mantiene la proporción de la image*/
@@ -304,8 +360,8 @@ body {
 .form-control-login {
   background-color: #F3F3D9 !important; /* Color de fondo más claro */
   border-radius: 0.5rem;
-  border: 2px solid #884615 !important; /* Borde más suave */
-  color: #884615 !important; /* Color de texto más oscuro */
+  border: 1px solid #884615 !important; /* Borde más suave */
+  color: #000000ff !important; /* Color de texto más oscuro */
 }
 
 .form-control-login:focus {
@@ -316,6 +372,58 @@ body {
 .register-page img{
   width: 200px; /* Ajusta el tamaño de la imagen según sea necesario */
   height: auto; /* Mantiene la proporción de la image*/
+}
+
+.register-login {
+  color: #884615;
+  cursor: pointer; 
+}
+
+.register-login:hover{
+  color: #502605ff !important;
+  cursor: pointer !important; 
+}
+
+/*Promotion books*/
+.promote-book-page{
+  background-color: #F4F4DA;
+}
+
+/* dashboard*/
+.nav-tabs .nav-link {
+    background-color: transparent;
+    color: #4b4848ff;
+    border-color: transparent transparent; /* Borde inferior */
+}
+
+.nav-tabs .nav-link.tab-active {
+    background-color: #F4F4DA; /* Color de fondo para la pestaña activa */
+    color: #502605ff; /* Color de texto para la pestaña activa */
+    border-color: #adb1b6ff #adb1b6ff #F4F4DA; /* Borde para la pestaña activa */
+}
+
+.admin-dashboard{
+  background-color: #F4F4DA;
+}
+
+.admin-table {
+    background-color: #F4F4DA; /* Color de fondo de la tabla */
+}
+
+.admin-table thead th {
+    background-color: #e0e0c5; /* Un color ligeramente más oscuro para la cabecera, opcional */
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: #f0f0d5; /* Un color ligeramente diferente para filas pares, opcional */
+}
+
+.admin-table tbody tr:hover {
+    background-color: #e8e8cc; /* Un color al pasar el ratón, opcional */
+}
+
+.card-color{
+  background-color: #F3F3D9; 
 }
 
 /* Responsive adjustments */

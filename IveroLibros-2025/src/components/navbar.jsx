@@ -1,10 +1,11 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
-import { BiHome, BiBookOpen, BiGroup, BiStar, BiNews } from 'react-icons/bi';
+import { BiHome, BiBookOpen, BiGroup, BiStar, BiNews, BiTachometer } from 'react-icons/bi';
 
-const MyNavbar = ({ currentPage, setCurrentPage }) => {
+// Se agrega la prop 'isAdmin' para validar si el usuario es administrador
+const MyNavbar = ({ currentPage, setCurrentPage, isAdmin }) => {
   return (
-    <Navbar expand="lg" className="py-3 shadow-sm">
+    <Navbar expand="lg" className="py-3 shadow-sm navbar-color">
       <Container>
         <Navbar.Brand href="#" onClick={() => setCurrentPage('home')}>
           <div className="d-flex align-items-center">
@@ -49,13 +50,15 @@ const MyNavbar = ({ currentPage, setCurrentPage }) => {
               <BiStar className="me-1" /> Promocionar Libro
             </Nav.Link>
 
-            {/* Noticias */}
-            <Nav.Link
-              className={`navbar-style ${currentPage === 'news' ? 'active-link' : ''}`}
-              onClick={() => setCurrentPage('news')}
-            >
-              <BiNews className="me-1" /> Noticias
-            </Nav.Link>
+            {/* Renderizado condicional del Dashboard */}
+            {isAdmin && (
+              <Nav.Link
+                className={`navbar-style ${currentPage === 'dashboard' ? 'active-link' : ''}`}
+                onClick={() => setCurrentPage('dashboard')}
+              >
+                <BiTachometer className="me-1" /> Dashboard
+              </Nav.Link>
+            )}
           </Nav>
 
           <Button variant="primary" className="ms-2" onClick={() => setCurrentPage('login')}>

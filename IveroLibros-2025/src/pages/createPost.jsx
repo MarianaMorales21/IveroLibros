@@ -6,20 +6,20 @@ const CreatePostPage = () => {
     <div className="create-post-page py-5">
       <Container>
         <div className="text-center mb-5">
-          <h1 className="display-5 fw-bold title-color">Inicia una Nueva </h1> 
-          <h1 className="display-5 fw-bold title-color-2">Conversación Literaria</h1>
+          <h1 className="display-5 fw-bold title-color-2">Inicia una Nueva </h1>
+          <h1 className="display-5 fw-bold title-color">Conversación Literaria</h1>
         </div>
 
         <Row className="justify-content-center create-post-Row">
           <Col md={8}>
-            <Form className= "form">
+            <Form className="form">
               <Form.Group className="mb-3">
-                <Form.Label>Título de la discusión:</Form.Label>
+                <Form.Label className='title-color-2'>Título de la discusión:</Form.Label>
                 <Form.Control className='post-forum' type="text" placeholder="Agregar título" />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>Categoría:</Form.Label>
+                <Form.Label className='title-color-2'>Categoría:</Form.Label>
                 <Form.Control className='post-forum' as="select">
                   <option>Selecciona una categoría</option>
                   <option>Discusiones Generales</option>
@@ -29,7 +29,7 @@ const CreatePostPage = () => {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>Escribe el contenido de la discusion:</Form.Label>
+                <Form.Label className='title-color-2'>Escribe el contenido de la discusion:</Form.Label>
                 <Form.Control className='post-forum' as="textarea" rows={6} placeholder="En este apartado escribe el contenido de la discusion. Se claro con lo que deseas compartir" />
               </Form.Group>
 
