@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
-import MyNavbar from './components/navbar'; // Componente de barra de navegación
+import MyNavbar from './components/navbar';
 import Footer from './components/footer';
 import HomePage from './pages/homePage';
 import ForumsPage from './pages/forumsPage';
@@ -16,50 +16,55 @@ import PromoteBookPage from './pages/promotionBookPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [pageProps, setPageProps] = useState({});
   const [selectedBook, setSelectedBook] = useState(null);
+  const [user, setUser] = useState(null);
 
-  // Estado para la suscripción del usuario.
-  const [userSubscriptionStatus] = useState('Premium'); //Gratuita
+  const handleSetCurrentPage = (pageName, props = {}) => {
+    setCurrentPage(pageName);
+    setPageProps(props);
+  };
 
-  // Estado para el rol de administrador.
-  const [isAdmin] = useState(true);
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    handleSetCurrentPage('home');
+  };
 
   const renderPage = () => {
+    const isAdmin = user?.rol === 'admin';
+    const userSubscriptionStatus = user?.suscripcion || 'Gratuita';
+
     switch (currentPage) {
       case 'home':
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <HomePage setCurrentPage={handleSetCurrentPage} />;
       case 'forums':
-        return <ForumsPage setCurrentPage={setCurrentPage} />;
+        return <ForumsPage setCurrentPage={handleSetCurrentPage} />;
       case 'create-post':
-        return <CreatePostPage setCurrentPage={setCurrentPage} />;
+        return <CreatePostPage setCurrentPage={handleSetCurrentPage} user={user} />;
       case 'register':
-        return <RegisterPage setCurrentPage={setCurrentPage} />;
+        return <RegisterPage setCurrentPage={handleSetCurrentPage} />;
       case 'login':
-        return <LoginPage setCurrentPage={setCurrentPage} />;
+        return <LoginPage setCurrentPage={handleSetCurrentPage} onLoginSuccess={handleLoginSuccess} />;
       case 'forumsPage':
-        return <Forums setCurrentPage={setCurrentPage} />;
+        return <Forums setCurrentPage={handleSetCurrentPage} pageProps={pageProps} user={user} />;
       case 'featured-books':
         return (
           <FeaturedBooksPage
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={handleSetCurrentPage}
             setSelectedBook={setSelectedBook}
           />
         );
       case 'book-details':
         return (
           <BookDetailsPage
-            book={selectedBook}
-            setCurrentPage={setCurrentPage}
+            bookId={selectedBook}
+            setCurrentPage={handleSetCurrentPage}
           />
         );
-      // **AQUÍ ESTÁ EL CAMBIO**
-      // Se corrigió el nombre de la página y se pasó la prop de la suscripción
       case 'promote-book':
         return <PromoteBookPage userSubscriptionStatus={userSubscriptionStatus} />;
-
       case 'dashboard':
-        return isAdmin ? <AdminDashboard setCurrentPage={setCurrentPage} /> : <HomePage setCurrentPage={setCurrentPage} />;
-
+        return isAdmin ? <AdminDashboard setCurrentPage={handleSetCurrentPage} /> : <HomePage setCurrentPage={handleSetCurrentPage} />;
       default:
         return <HomePage />;
     }
@@ -67,7 +72,7 @@ function App() {
 
   return (
     <div>
-      <MyNavbar setCurrentPage={setCurrentPage} isAdmin={isAdmin} />
+      <MyNavbar setCurrentPage={handleSetCurrentPage} user={user} isAdmin={user?.rol === 'admin'} />
       {renderPage()}
       <Footer />
     </div>

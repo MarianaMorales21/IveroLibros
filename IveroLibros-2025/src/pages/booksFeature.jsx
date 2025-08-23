@@ -1,37 +1,63 @@
-import React from 'react';
-import { Container, Row, Col, Form, Card, Button } from 'react-bootstrap';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Container, Row, Col, Form, Card, Button, Spinner } from 'react-bootstrap';
+import { helpHttp } from '../helpHttp';
 
 const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
-  const books = [
-    {
-      id: 1,
-      title: 'El Susurro de las Páginas',
-      description: 'Una novela cautivadora que explora los secretos ocultos en una biblioteca centenaria.',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLO6mv9QkTQ37qe3pVP66MJs_tD__HFk440w&s',
-      alt: 'Book cover for El Susurro de las Páginas'
-    },
-    {
-      id: 2,
-      title: 'Lo que nunca te dije',
-      description: 'Una narrativa emocional que revelará secretos del pasado.',
-      image: 'https://panamericana.vtexassets.com/arquivos/ids/290167-800-auto?v=636596702376200000&width=800&height=auto&aspect=true',
-      alt: 'Book cover for Lo que nunca te dije'
-    },
-    {
-      id: 3,
-      title: 'El Viaje del Héroe',
-      description: 'Un relato épico sobre el autodescubrimiento y la valentía en un mundo de fantasía.',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxr83LoozE7JPzRIHb3RCisYnZkTkBl3fA8Q&s',
-      alt: 'Book cover for El Viaje del Héroe'
-    },
-    {
-      id: 4,
-      title: 'Los Cien Días de Invierno',
-      description: 'Un thriller psicológico ambientado en un remoto pueblo nevado, donde cada habitante es un sospechoso.',
-      image: 'https://m.media-amazon.com/images/I/51AdBl6JoEL._UF1000,1000_QL80_.jpg',
-      alt: 'Book cover for Los Cien Días de Invierno'
-    },
-  ];
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const api = helpHttp();
+
+  const fetchBooks = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('http://localhost:8080/libros');
+      
+      if (!response.err) {
+        setBooks(response.data);
+        setError(null);
+      } else {
+        setError(response.statusText || 'Error al cargar los libros.');
+      }
+    } catch (err) {
+      console.error("Error de red:", err);
+      setError('Ocurrió un error de red. Inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  }, [api]);
+
+  useEffect(() => {
+    fetchBooks();
+  }, [fetchBooks]);
+
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Cargando libros...</span>
+        </Spinner>
+        <p className="mt-2">Cargando libros...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center my-5 text-danger">
+        <p>{error}</p>
+        <Button variant="primary" onClick={fetchBooks}>Reintentar</Button>
+      </div>
+    );
+  }
+
+  if (books.length === 0) {
+    return (
+      <div className="text-center my-5">
+        <p>No se encontraron libros destacados.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="featured-books-page py-5">
@@ -75,7 +101,8 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
                     <Button
                       variant="outline-primary"
                       onClick={() => {
-                        setSelectedBook(book);
+                        // **CAMBIO:** Ahora solo pasamos el ID del libro
+                        setSelectedBook(book.id);
                         setCurrentPage('book-details');
                       }}
                     >

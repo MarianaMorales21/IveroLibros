@@ -52,6 +52,10 @@ const PromoteBookPage = ({ userSubscriptionStatus }) => {
                                         <Form.Label className='title-color-2'>Sinopsis</Form.Label>
                                         <Form.Control className='form-control-login' as="textarea" rows={4} placeholder="Escribe la sinopsis del libro..." />
                                     </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className='title-color-2'>Link de compra/contacto</Form.Label>
+                                        <Form.Control className='form-control-login' type="text" placeholder="https://compra.com" />
+                                    </Form.Group>
                                     <Form.Group className="mb-4">
                                         <Form.Label className='title-color-2'>Portada del Libro</Form.Label>
                                         <Form.Control className='form-control-login' type="file" accept="image/*" />
