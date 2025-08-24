@@ -25,7 +25,21 @@ class Libro
     // Obtener todos los libros
     public function getAll()
     {
-        $query = "SELECT id, titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id FROM " . $this->table;
+        $query = "SELECT 
+                id, 
+                titulo AS title, 
+                autor, 
+                año, 
+                genero_id, 
+                editorial, 
+                paginas, 
+                sinopsis, 
+                linkCompra, 
+                portada AS image, 
+                descripcion AS description, 
+                usuario_id 
+              FROM " . $this->table;
+
         $stmt = $this->conn->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

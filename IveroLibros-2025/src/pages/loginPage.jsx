@@ -1,43 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { helpHttp } from '../helpHttp';
 
-// El componente ahora recibe onLoginSuccess
 const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
-  // 1. Estados para los campos del formulario y mensajes de error
+  const url = 'http://localhost:8000/login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 2. Instancia de la utilidad para peticiones
-  const api = helpHttp();
 
-  // 3. Función para manejar el envío del formulario
+  // Redirección si el usuario ya está logeado
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('user');
+    if (loggedInUser) {
+      setCurrentPage('login');
+    }
+  }, []);
+
+  // Función para manejar el envío del formulario
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMessage(''); // Limpiar cualquier mensaje de error anterior
 
     try {
-      // 4. Petición a la API para iniciar sesión
-      const response = await api.post('http://localhost:8080/login', {
-        body: {
+      // Petición a la API para iniciar sesión
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include', // Para enviar cookies
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email: email,
           contraseña: password,
-        },
+        }),
       });
 
-      // 5. Manejo de la respuesta
-      if (!response.err) {
-        // Inicio de sesión exitoso, ahora se llama a onLoginSuccess
-        console.log('Inicio de sesión exitoso:', response);
-        onLoginSuccess(response); // <-- **CAMBIO CLAVE**
-      } else {
-        // Si hay un error, mostrar el mensaje de error del servidor
-        setErrorMessage(response.statusText || 'Credenciales incorrectas');
+      if (!response.ok) {
+        // Si el estado no es 200, leer el cuerpo del error y lanzar una excepción
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Credenciales incorrectas');
       }
+
+      const data = await response.json();
+      console.log('Inicio de sesión exitoso:', data);
+      localStorage.setItem('user', JSON.stringify(data));
+      onLoginSuccess(data.user); // Usa data.user para la respuesta
+      setCurrentPage('home'); // Redirige al dashboard
+
     } catch (error) {
       console.error('Error durante el inicio de sesión:', error);
-      setErrorMessage('Ocurrió un error inesperado. Inténtalo de nuevo.');
+      // Actualiza el mensaje de error del estado
+      setErrorMessage(error.message);
     }
   };
 

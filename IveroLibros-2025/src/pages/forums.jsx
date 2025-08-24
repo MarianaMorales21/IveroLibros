@@ -1,46 +1,70 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Container, Row, Col, Card, Form, Button, Spinner } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { helpHttp } from '../helpHttp';
 
 const Forums = ({ setCurrentPage, pageProps }) => {
-  const { id } = pageProps;
+  const { id } = pageProps; // id de la discusión seleccionada
   const [discussion, setDiscussion] = useState(null);
   const [responses, setResponses] = useState([]);
   const [newResponseText, setNewResponseText] = useState('');
   const [loading, setLoading] = useState(true);
   const [sendingResponse, setSendingResponse] = useState(false);
   const [error, setError] = useState(null);
-  const api = helpHttp();
 
-  const fetchDiscussionData = useCallback(async () => {
+  const api = helpHttp();
+  const urlDiscussion = `http://localhost:8000/discusiones/${id}`;
+  const urlResponses = `http://localhost:8000/respuestas/${id}`;
+
+  useEffect(() => {
+    fetchDiscussion();
+    fetchResponses();
+  }, [id]);
+
+  const fetchDiscussion = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`http://localhost:8080/discusiones/${id}`);
-
-      if (response && !response.err) {
-        setDiscussion(response.discussion);
-        setResponses(response.responses);
-        setError(null);
+      setError(null);
+      const discResponse = await api.get(urlDiscussion);
+      if (!discResponse.err) {
+        // obtener autor
+        const user = await api.get(`http://localhost:8000/usuarios/${discResponse.usuario_id}`);
+        const autor = user && !user.err ? `${user.nombre} ${user.apellido}` : 'Desconocido';
+        setDiscussion({ ...discResponse, autor });
       } else {
-        const errorMessage = response.statusText || 'Error al cargar la discusión.';
-        setError(errorMessage);
+        setError(discResponse.statusText || 'Error al cargar la discusión.');
       }
     } catch (err) {
-      console.error("Error de red:", err);
+      console.error(err);
       setError('Ocurrió un error de red. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
-  }, [id, api]); // Las dependencias de useCallback son 'id' y 'api'
+  };
 
-  useEffect(() => {
-    if (!id) {
-      setError("No se encontró la discusión. Por favor, regresa al foro.");
-      setLoading(false);
-      return;
+  const fetchResponses = async () => {
+    try {
+      const resResponse = await api.get(urlResponses);
+      if (resResponse && Array.isArray(resResponse)) {
+        const enrichedResponses = await Promise.all(
+          resResponse.map(async (resp) => {
+            const respUser = await api.get(`http://localhost:8000/usuarios/${resp.usuario_id}`);
+            const respAutor = respUser && !respUser.err ? `${respUser.nombre} ${respUser.apellido}` : 'Desconocido';
+            return {
+              ...resp,
+              autor: respAutor,
+              tiempo: resp.hora || 'un momento',
+              contenido: resp.respuesta,
+            };
+          })
+        );
+        setResponses(enrichedResponses);
+      } else {
+        setResponses([]);
+      }
+    } catch (err) {
+      console.error(err);
     }
-    fetchDiscussionData();
-  }, [id, api, fetchDiscussionData]); // El efecto ahora depende de la versión memorizada de la función
+  };
 
   const handleSubmitResponse = async (e) => {
     e.preventDefault();
@@ -48,23 +72,23 @@ const Forums = ({ setCurrentPage, pageProps }) => {
 
     try {
       setSendingResponse(true);
-      const response = await api.post('http://localhost:8080/respuestas', {
+      const response = await api.post('http://localhost:8000/respuestas', {
         body: {
           discusion_id: id,
-          usuario_id: 1,
+          usuario_id: 1, // aquí debería ser el usuario logueado
           respuesta: newResponseText,
-          hora: new Date().toISOString()
-        }
+          hora: new Date().toISOString(),
+        },
       });
 
       if (!response.err) {
         setNewResponseText('');
-        await fetchDiscussionData();
+        fetchResponses();
       } else {
         setError(response.statusText || 'Error al enviar la respuesta.');
       }
     } catch (err) {
-      console.error('Error al enviar la respuesta:', err);
+      console.error(err);
       setError('Ocurrió un error inesperado al enviar la respuesta.');
     } finally {
       setSendingResponse(false);
@@ -74,7 +98,7 @@ const Forums = ({ setCurrentPage, pageProps }) => {
   if (loading) {
     return (
       <div className="text-center my-5">
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" role="status" className="title-color">
           <span className="visually-hidden">Cargando...</span>
         </Spinner>
         <p className="mt-2">Cargando discusión...</p>
@@ -113,11 +137,12 @@ const Forums = ({ setCurrentPage, pageProps }) => {
         <Card className="mb-4 shadow-sm main-post-card bg-custom-yellow title-color-section">
           <Card.Body>
             <div className="d-flex align-items-center mb-3">
-              <div className="user-avatar user-avatar-maria me-2"></div>
+              {/* No se tienen imágenes de avatar en los datos de la API, se mantiene el estilo base */}
+              <div className="user-avatar user-avatar-default me-2"></div>
               <div className="user-info">
                 <span className="fw-bold">{discussion.autor}</span>
                 <br />
-                <span className="text-muted small">Publicado hace {discussion.tiempo || 'un momento'}</span>
+                <span className="text-muted small">Publicado {discussion.tiempo || 'un momento'}</span>
               </div>
             </div>
             <h4 className="fw-bold mb-3 title-color">{discussion.titulo}</h4>
@@ -142,22 +167,21 @@ const Forums = ({ setCurrentPage, pageProps }) => {
             </Button>
           </div>
         </Form>
-        {responses.map((response) => (
-          <Card key={response.id} className="mb-3 shadow-sm response-card bg-custom-yellow title-color-section">
+        {responses.length > 0 ? responses.map((resp) => (
+          <Card key={resp.id} className="mb-3 shadow-sm response-card bg-custom-yellow title-color-section">
             <Card.Body>
               <div className="d-flex align-items-center mb-2">
-                <div className={`user-avatar user-avatar-default me-2`}></div>
+                <div className="user-avatar user-avatar-default me-2"></div>
                 <div className="user-info">
-                  <span className="fw-bold">{response.autor}</span>
+                  <span className="fw-bold">{resp.autor}</span>
                   <br />
-                  <span className="text-muted small">Publicado {response.tiempo}</span>
+                  <span className="text-muted small">Publicado {resp.tiempo}</span>
                 </div>
               </div>
-              <p className="mb-0">{response.contenido}</p>
+              <p className="mb-0">{resp.contenido}</p>
             </Card.Body>
           </Card>
-        ))}
-        {responses.length === 0 && (
+        )) : (
           <div className="text-center my-5">
             <p>Aún no hay respuestas. ¡Sé el primero en responder!</p>
           </div>

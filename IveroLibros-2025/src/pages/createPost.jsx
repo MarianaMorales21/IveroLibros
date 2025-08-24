@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Spinner } from 'react-bootstrap';
-import { helpHttp } from '../helpHttp';
+import { helpHttp } from '../helpHttp'; // Se ajustó la ruta de importación
 
 // El componente ahora recibe la prop 'user'
 const CreatePostPage = ({ setCurrentPage, user }) => {
@@ -40,7 +40,7 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
         hora: new Date().toISOString()
       };
 
-      const response = await api.post('http://localhost:8080/api/discussions/create.php', {
+      const response = await api.post('http://localhost:8000/discusiones', {
         body: newDiscussion,
       });
 

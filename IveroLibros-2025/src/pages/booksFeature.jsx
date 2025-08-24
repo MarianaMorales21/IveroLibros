@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Card, Button, Spinner } from 'react-bootstrap';
 import { helpHttp } from '../helpHttp';
 
@@ -6,30 +6,32 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const api = helpHttp();
 
-  const fetchBooks = useCallback(async () => {
+  const api = helpHttp();
+  const urlBooks = 'http://localhost:8000/libros';
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
     try {
       setLoading(true);
-      const response = await api.get('http://localhost:8080/libros');
-      
+      const response = await api.get(urlBooks);
+
       if (!response.err) {
-        setBooks(response.data);
+        setBooks(response || []);
         setError(null);
       } else {
         setError(response.statusText || 'Error al cargar los libros.');
       }
     } catch (err) {
-      console.error("Error de red:", err);
+      console.error('Error de red:', err);
       setError('Ocurrió un error de red. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
-  }, [api]);
-
-  useEffect(() => {
-    fetchBooks();
-  }, [fetchBooks]);
+  };
 
   if (loading) {
     return (
@@ -62,17 +64,23 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
   return (
     <div className="featured-books-page py-5">
       <Container>
-        <div className="text-center mb-5 ">
+        <div className="text-center mb-5">
           <h1 className="display-5 fw-bold title-color-2">Descubre Nuevas</h1>
           <h1 className="display-5 fw-bold title-color">Joyas Literarias</h1>
-          <p className="lead">Explora nuestra selección de libros imperdibles: conoce sus reseñas y adquiere tu próxima gran lectura.</p>
+          <p className="lead">
+            Explora nuestra selección de libros imperdibles: conoce sus reseñas y adquiere tu próxima gran lectura.
+          </p>
         </div>
 
         <Row className="mb-4">
           <Col md={4} className="mb-3">
             <Form.Group>
               <Form.Label className="title-color-2">Nombre del libro</Form.Label>
-              <Form.Control className="filter form-control-login" type="text" placeholder="Ej. El Susurro de las Páginas" />
+              <Form.Control
+                className="filter form-control-login"
+                type="text"
+                placeholder="Ej. El Susurro de las Páginas"
+              />
             </Form.Group>
           </Col>
           <Col md={4} className="mb-3">
@@ -89,10 +97,10 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
         </Row>
 
         <Row className="g-4">
-          {books.map(book => (
+          {books.map((book) => (
             <Col xs={12} sm={6} md={4} lg={3} key={book.id}>
               <Card className="h-100 shadow-sm custom-card title-color-section">
-                <Card.Img variant="top" src={book.image} alt={book.alt} />
+                <Card.Img variant="top" src={book.image} alt={book.title} />
                 <Card.Body>
                   <Card.Title>{book.title}</Card.Title>
                   <Card.Text className="text-muted">{book.description}</Card.Text>
@@ -101,7 +109,6 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
                     <Button
                       variant="outline-primary"
                       onClick={() => {
-                        // **CAMBIO:** Ahora solo pasamos el ID del libro
                         setSelectedBook(book.id);
                         setCurrentPage('book-details');
                       }}

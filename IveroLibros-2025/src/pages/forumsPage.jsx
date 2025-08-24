@@ -1,36 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Card, Spinner } from 'react-bootstrap';
+import { Container, Button, Card, Spinner } from 'react-bootstrap';
 import { helpHttp } from '../helpHttp';
 
 const ForumsPage = ({ setCurrentPage }) => {
   const [discussions, setDiscussions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const api = helpHttp();
+  const urlDiscussions = 'http://localhost:8000/discusiones';
+  const urlUsers = 'http://localhost:8000/usuarios';
+  const urlResponses = 'http://localhost:8000/respuestas';
 
   useEffect(() => {
-    const fetchDiscussions = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get('http://localhost:8080/discusiones');
-
-        if (response && !response.err && Array.isArray(response)) {
-          setDiscussions(response);
-          setError(null);
-        } else {
-          const errorMessage = response.statusText || 'Error al cargar las discusiones.';
-          setError(errorMessage);
-        }
-      } catch (err) {
-        console.error("Error de red:", err);
-        setError('Ocurrió un error de red. Por favor, inténtalo de nuevo.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDiscussions();
-  }, [api]); // <-- Se agregó 'api' como dependencia
+  }, []);
+
+  const fetchDiscussions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await api.get(urlDiscussions);
+
+      if (!response.err && Array.isArray(response)) {
+        // Enriquecer cada discusión con autor y cantidad de respuestas
+        const enriched = await Promise.all(
+          response.map(async (disc) => {
+            // Obtener autor
+            const user = await api.get(`${urlUsers}/${disc.usuario_id}`);
+            const autor = user && !user.err ? `${user.nombre} ${user.apellido}` : 'Desconocido';
+
+            // Obtener respuestas
+            const respuestas = await api.get(`${urlResponses}/${disc.id}`);
+            const respuestas_count = respuestas && Array.isArray(respuestas) ? respuestas.length : 0;
+
+            return {
+              ...disc,
+              autor,
+              respuestas_count,
+            };
+          })
+        );
+
+        setDiscussions(enriched);
+        setError(null);
+      } else {
+        setError(response.statusText || 'Error al cargar las discusiones.');
+      }
+    } catch (err) {
+      console.error('Error de red:', err);
+      setError('Ocurrió un error de red. Inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const truncateContent = (text) => {
     if (!text) return '';
@@ -41,7 +65,7 @@ const ForumsPage = ({ setCurrentPage }) => {
     return (
       <div className="text-center my-5">
         <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">Cargando discusiones...</span>
         </Spinner>
         <p className="mt-2">Cargando discusiones...</p>
       </div>
@@ -52,6 +76,15 @@ const ForumsPage = ({ setCurrentPage }) => {
     return (
       <div className="text-center my-5 text-danger">
         <p>{error}</p>
+        <Button variant="primary" onClick={fetchDiscussions}>Reintentar</Button>
+      </div>
+    );
+  }
+
+  if (discussions.length === 0) {
+    return (
+      <div className="text-center my-5">
+        <p>Aún no hay discusiones. ¡Sé el primero en crear una!</p>
       </div>
     );
   }
@@ -59,18 +92,34 @@ const ForumsPage = ({ setCurrentPage }) => {
   return (
     <div className="forums-page py-5">
       <Container>
-        <div className="text-center mb-5 ">
-          <h1 className="display-5 fw-bold title-color-2">Conversa y Conecta en </h1>
-          <h1 className="display-5 fw-bold title-color "> Nuestra Comunidad Literaria</h1>
-          <p className="lead mt-3">Únete a nuestra comunidad de lectores apasionados. <br /> Participa en debates, comparte tus descubrimientos y conecta con amantes de la literatura independiente.</p>
-          <Button variant="primary" className="mt-3 button-forums-margin" onClick={() => setCurrentPage('create-post')}>Crear nueva discusion</Button>
+        <div className="text-center mb-5">
+          <h1 className="display-5 fw-bold title-color-2">Conversa y Conecta en</h1>
+          <h1 className="display-5 fw-bold title-color">Nuestra Comunidad Literaria</h1>
+          <p className="lead mt-3">
+            Únete a nuestra comunidad de lectores apasionados. <br />
+            Participa en debates, comparte tus descubrimientos y conecta con amantes de la literatura independiente.
+          </p>
+          <Button
+            variant="primary"
+            className="mt-3 button-forums-margin"
+            onClick={() => setCurrentPage('create-post')}
+          >
+            Crear nueva discusión
+          </Button>
         </div>
+
         <h2 className="fw-bold mb-4 title-forums-2">Discusiones Generales</h2>
 
         {discussions.map((thread) => (
           <Card className="mb-3 title-color-section" key={thread.id}>
             <Card.Body>
-              <h5 className="fw-bold" style={{ cursor: 'pointer' }} onClick={() => setCurrentPage("forumsPage", { id: thread.id })}>{thread.titulo}</h5>
+              <h5
+                className="fw-bold"
+                style={{ cursor: 'pointer' }}
+                onClick={() => setCurrentPage('forumsPage', { id: thread.id })}
+              >
+                {thread.titulo}
+              </h5>
               <p className="mb-1">{truncateContent(thread.contenido)}</p>
               <div className="text-muted small">
                 Por {thread.autor} • {thread.respuestas_count} Respuestas
@@ -78,12 +127,6 @@ const ForumsPage = ({ setCurrentPage }) => {
             </Card.Body>
           </Card>
         ))}
-
-        {discussions.length === 0 && (
-          <div className="text-center my-5">
-            <p>Aún no hay discusiones. ¡Sé el primero en crear una!</p>
-          </div>
-        )}
       </Container>
     </div>
   );

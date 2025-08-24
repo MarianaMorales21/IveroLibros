@@ -31,8 +31,9 @@ function App() {
   };
 
   const renderPage = () => {
-    const isAdmin = user?.rol === 'admin';
+    const isAdmin = user?.rol === 'Administrador';
     const userSubscriptionStatus = user?.suscripcion || 'Gratuita';
+
 
     switch (currentPage) {
       case 'home':
@@ -72,7 +73,7 @@ function App() {
 
   return (
     <div>
-      <MyNavbar setCurrentPage={handleSetCurrentPage} user={user} isAdmin={user?.rol === 'admin'} />
+      <MyNavbar setCurrentPage={handleSetCurrentPage} user={user} isAdmin={user?.rol === 'Administrador'} />
       {renderPage()}
       <Footer />
     </div>

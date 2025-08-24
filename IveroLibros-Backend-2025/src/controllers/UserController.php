@@ -2,24 +2,29 @@
 // src/controllers/UserController.php
 require_once __DIR__ . "/../models/user.php";
 
-class UserController {
+class UserController
+{
     private $user;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->user = new User($db);
     }
 
-    public function index() {
+    public function index()
+    {
         echo json_encode($this->user->getAll());
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $data = $this->user->getById($id);
         echo json_encode($data ?: ["error" => "Usuario no encontrado"]);
     }
 
-    public function store($data) {
-        $required = ["nombre","apellido","role","suscripcion","fechaSuscripcion","email","contraseña"];
+    public function store($data)
+    {
+        $required = ["nombre", "apellido", "rol", "suscripcion", "fechaSuscripcion", "email", "contraseña"];
         foreach ($required as $field) {
             if (!isset($data[$field])) {
                 http_response_code(400);
@@ -27,16 +32,27 @@ class UserController {
                 return;
             }
         }
+
+        // Verificar si el email ya existe
+        if ($this->user->getByEmail($data['email'])) {
+            http_response_code(409); // 409 Conflict
+            echo json_encode(["error" => "El email ya está registrado"]);
+            return;
+        }
+
         $id = $this->user->create($data);
         echo json_encode(["success" => true, "id" => $id]);
     }
 
-    public function update($id, $data) {
+
+    public function update($id, $data)
+    {
         $ok = $this->user->update($id, $data);
         echo json_encode(["success" => $ok]);
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $ok = $this->user->delete($id);
         echo json_encode(["success" => $ok]);
     }

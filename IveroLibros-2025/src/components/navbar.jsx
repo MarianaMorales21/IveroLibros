@@ -1,9 +1,25 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { BiHome, BiBookOpen, BiGroup, BiStar, BiNews, BiTachometer } from 'react-icons/bi';
-
+import { helpHttp } from '../helpHttp';
 // Se agrega la prop 'isAdmin' para validar si el usuario es administrador
 const MyNavbar = ({ currentPage, setCurrentPage, isAdmin }) => {
+  const api = helpHttp();
+  const handleLogout = async () => {
+    try {
+      const response = await api.post('http://localhost:8000/logout');
+      if (!response.err) {
+        console.log('Sesión cerrada correctamente');
+        // Redirigir al usuario a la página de inicio de sesión
+        setCurrentPage('login');
+      } else {
+        console.error('Error al cerrar sesión:', response);
+      }
+    } catch (error) {
+      console.error('Error de red al cerrar sesión:', error);
+    }
+  };
+
   return (
     <Navbar expand="lg" className="py-3 shadow-sm navbar-color">
       <Container>
@@ -60,7 +76,7 @@ const MyNavbar = ({ currentPage, setCurrentPage, isAdmin }) => {
               </Nav.Link>
             )}
           </Nav>
-
+          <Button variant="primary" className="ms-2" onClick={handleLogout}>Cerrar Sesión</Button>
           <Button variant="primary" className="ms-2" onClick={() => setCurrentPage('login')}>
             Iniciar Sesión
           </Button>
@@ -74,3 +90,5 @@ const MyNavbar = ({ currentPage, setCurrentPage, isAdmin }) => {
 };
 
 export default MyNavbar;
+
+
