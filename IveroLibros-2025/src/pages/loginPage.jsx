@@ -7,28 +7,25 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-
-  // Redirección si el usuario ya está logeado
+  // Verificar si ya hay sesión activa
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
-      setCurrentPage('login');
+      const parsedUser = JSON.parse(loggedInUser);
+      onLoginSuccess(parsedUser.user);  // restaurar usuario
+      setCurrentPage('home');          // mandar al dashboard
     }
-  }, []);
+  }, [setCurrentPage, onLoginSuccess]);
 
-  // Función para manejar el envío del formulario
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Limpiar cualquier mensaje de error anterior
+    setErrorMessage('');
 
     try {
-      // Petición a la API para iniciar sesión
       const response = await fetch(url, {
         method: 'POST',
-        credentials: 'include', // Para enviar cookies
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: email,
           contraseña: password,
@@ -36,20 +33,22 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
       });
 
       if (!response.ok) {
-        // Si el estado no es 200, leer el cuerpo del error y lanzar una excepción
         const errorData = await response.json();
         throw new Error(errorData.error || 'Credenciales incorrectas');
       }
 
       const data = await response.json();
       console.log('Inicio de sesión exitoso:', data);
+
+      // Guardar en localStorage
       localStorage.setItem('user', JSON.stringify(data));
-      onLoginSuccess(data.user); // Usa data.user para la respuesta
-      setCurrentPage('home'); // Redirige al dashboard
+
+      // Notificar a la app y redirigir
+      onLoginSuccess(data.user);
+      setCurrentPage('home');
 
     } catch (error) {
       console.error('Error durante el inicio de sesión:', error);
-      // Actualiza el mensaje de error del estado
       setErrorMessage(error.message);
     }
   };
@@ -58,14 +57,15 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
     <div className="login-page py-5">
       <Container>
         <div className="text-center mb-3">
-          <img src="/LibroInicio.png" alt="IveroLibros Logo" className="" />
+          <img src="/LibroInicio.png" alt="IveroLibros Logo" />
           <h1 className="display-5 fw-bold title-color">Inicio Sesion</h1>
           <p className="lead">Accede a tu cuenta de IveroLibros</p>
         </div>
-        <Row className="justify-content-center ">
+        <Row className="justify-content-center">
           <Col md={6}>
             <Form onSubmit={handleLogin} className="p-4 shadow-sm">
               {errorMessage && <div className="text-danger mb-3">{errorMessage}</div>}
+
               <Form.Group className="mb-3">
                 <Form.Label className="title-color-2">Email</Form.Label>
                 <Form.Control
@@ -77,10 +77,11 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
                   required
                 />
               </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label className="title-color-2">Contraseña</Form.Label>
                 <Form.Control
-                  className='form-control-login'
+                  className="form-control-login"
                   type="password"
                   placeholder="********"
                   value={password}
@@ -88,12 +89,27 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
                   required
                 />
               </Form.Group>
+
               <div className="d-grid gap-2 mt-4">
-                <Button variant="primary" type="submit" size="lg">Inicia Sesion</Button>
-                <Button variant="outline-primary" size="lg" onClick={() => setCurrentPage('register')}>Registrarse</Button>
+                <Button variant="primary" type="submit" size="lg">
+                  Inicia Sesion
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  size="lg"
+                  onClick={() => setCurrentPage('register')}
+                >
+                  Registrarse
+                </Button>
               </div>
+
               <div className="text-center mt-3">
-                <a onClick={() => setCurrentPage('forgotPassword')} className="register-login">¿Olvidaste tu contraseña?</a>
+                <a
+                  onClick={() => setCurrentPage('forgotPassword')}
+                  className="register-login"
+                >
+                  ¿Olvidaste tu contraseña?
+                </a>
               </div>
             </Form>
           </Col>

@@ -35,23 +35,28 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando libros...</span>
-        </Spinner>
-        <p className="mt-2">Cargando libros...</p>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando Libros...</span>
+          </Spinner>
+          <p className="mt-2">Cargando Libros...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center my-5 text-danger">
-        <p>{error}</p>
-        <Button variant="primary" onClick={fetchBooks}>Reintentar</Button>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <p>{error}</p>
+          <Button variant="primary" onClick={fetchBooks}>Reintentar</Button>
+        </div>
       </div>
     );
   }
+
 
   if (books.length === 0) {
     return (
@@ -100,10 +105,10 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
           {books.map((book) => (
             <Col xs={12} sm={6} md={4} lg={3} key={book.id}>
               <Card className="h-100 shadow-sm custom-card title-color-section">
-                <Card.Img variant="top" src={book.image} alt={book.title} />
+                <Card.Img variant="top" src={book.portada} alt={book.titulo} />
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <Card.Text className="text-muted">{book.description}</Card.Text>
+                  <Card.Title>{book.titulo}</Card.Title>
+                  <Card.Text className="text-muted">{book.descripcion}</Card.Text>
                   <div className="d-grid gap-2">
                     <Button variant="primary">Comprar</Button>
                     <Button

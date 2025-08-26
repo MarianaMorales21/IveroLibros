@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 
-const MainContent = ({setCurrentPage}) => {
+const MainContent = ({ setCurrentPage }) => {
   return (
     <>
       {/* Sección Hero */}
@@ -25,7 +25,7 @@ const MainContent = ({setCurrentPage}) => {
                 >
                   Explora el foro
                 </Button>
-                <Button variant="outline-primary">Promociona tu libro</Button>
+                <Button variant="outline-primary" onClick={() => setCurrentPage('promote-book')}>Promociona tu libro</Button>
               </div>
             </Col>
             <Col lg={6}>

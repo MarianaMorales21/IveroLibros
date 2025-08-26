@@ -1,28 +1,26 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card, Spinner } from 'react-bootstrap';
-import { helpHttp } from '../helpHttp'; // Se ajustó la ruta de importación
+import { Container, Row, Col, Form, Button, Card, Spinner, Alert } from 'react-bootstrap';
+import { helpHttp } from '../helpHttp';
 
-// El componente ahora recibe la prop 'user'
 const CreatePostPage = ({ setCurrentPage, user }) => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null); // ✅ nuevo estado
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const api = helpHttp();
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
 
-    // **Validar si el usuario está logueado**
     if (!user || !user.id) {
       setError('Debes iniciar sesión para crear una discusión.');
       return;
     }
 
-    // Validar que los campos no estén vacíos
     if (!title.trim() || !category.trim() || !content.trim()) {
       setError('Por favor, llena todos los campos.');
       return;
@@ -31,25 +29,25 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
     try {
       setIsCreatingPost(true);
 
-      // Construir el objeto para la petición POST
       const newDiscussion = {
         titulo: title,
         categoria: category,
         contenido: content,
-        usuario_id: user.id, // Usar el ID del usuario logueado
-        hora: new Date().toISOString()
+        usuario_id: user.id,
       };
 
       const response = await api.post('http://localhost:8000/discusiones', {
         body: newDiscussion,
       });
 
-      if (!response.err) {
-        console.log('Discusión creada con éxito:', response);
-        // Redirigir al usuario a la página de foros principal
-        setCurrentPage('forumsPage');
-      } else {
+      if (response.err) {
         setError(response.statusText || 'Error al crear la discusión. Inténtalo de nuevo.');
+      } else {
+        setSuccessMessage('Discusión creada con éxito'); // ✅ mensaje
+        // esperar 2 segundos antes de redirigir
+        setTimeout(() => {
+          setCurrentPage('forums');
+        }, 2000);
       }
     } catch (err) {
       console.error('Error de red al crear el post:', err);
@@ -73,9 +71,12 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
           <Col md={8}>
             <Card className="p-4 shadow-sm bg-custom-yellow">
               <Form onSubmit={handleSubmit}>
-                {error && <div className="text-danger mb-3 text-center">{error}</div>}
+                {/* ✅ Alerta de error */}
+                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
 
-                {/* Título de la Discusión */}
+                {/* ✅ Alerta de éxito */}
+                {successMessage && <Alert variant="success" className="text-center">{successMessage}</Alert>}
+
                 <Form.Group className="mb-3">
                   <Form.Label className="title-color-2 fw-bold">Título</Form.Label>
                   <Form.Control
@@ -89,7 +90,6 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
                   />
                 </Form.Group>
 
-                {/* Categoría */}
                 <Form.Group className="mb-3">
                   <Form.Label className="title-color-2 fw-bold">Categoría</Form.Label>
                   <Form.Control
@@ -109,7 +109,6 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
                   </Form.Control>
                 </Form.Group>
 
-                {/* Contenido */}
                 <Form.Group className="mb-3">
                   <Form.Label className="title-color-2 fw-bold">Contenido</Form.Label>
                   <Form.Control

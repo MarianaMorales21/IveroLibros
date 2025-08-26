@@ -41,22 +41,26 @@ const BookDetailsPage = ({ bookId, setCurrentPage }) => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando detalles...</span>
-        </Spinner>
-        <p className="mt-2">Cargando detalles del libro...</p>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando detalles...</span>
+          </Spinner>
+          <p className="mt-2">Cargando detalles del libro...</p>
+        </div>
       </div>
     );
   }
 
   if (error || !book) {
     return (
-      <div className="text-center my-5 text-danger">
-        <p>{error || 'No se pudo encontrar el libro. Por favor, intente de nuevo.'}</p>
-        <Button variant="primary" onClick={() => setCurrentPage('featured-books')}>
-          Volver a la lista de libros
-        </Button>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center my-5 text-danger">
+          <p>{error || 'No se pudo encontrar el libro. Por favor, intente de nuevo.'}</p>
+          <Button variant="primary" onClick={() => setCurrentPage('featured-books')}>
+            Volver a la lista de libros
+          </Button>
+        </div>
       </div>
     );
   }

@@ -36,7 +36,7 @@ class Libro
                 sinopsis, 
                 linkCompra, 
                 portada AS image, 
-                descripcion AS description, 
+                descripcion, 
                 usuario_id 
               FROM " . $this->table;
 

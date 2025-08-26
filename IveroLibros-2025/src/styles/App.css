@@ -5,6 +5,11 @@ body {
 }
 
 /* Navbar */
+
+
+/* Estilos de botones para el NavDropdown */
+
+
 .navbar-color{
   background-color: #f7f7ebff; /* Color marrón oscuro */
 }
@@ -15,6 +20,21 @@ body {
   transition: color 0.2s ease-in-out; /* Opcional, pero recomendado para un cambio suave */
 
 }
+
+.nav-dropdown-user {
+    color: #884615 !important;
+}
+
+.menu-item:hover {
+    background-color: #884615 !important;
+    color: white !important;
+}
+
+/* Oculta el triángulo del NavDropdown. Puedes eliminar esta regla si quieres que se muestre. */
+.dropdown-toggle::after {
+    display: none;
+}
+
 
 /* Cambia el color cuando el enlace está enfocado (con teclado) o se le pasa el mouse por encima */
 .navbar-style:hover, .navbar-style:focus {

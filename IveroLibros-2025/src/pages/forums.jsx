@@ -97,20 +97,24 @@ const Forums = ({ setCurrentPage, pageProps }) => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" role="status" className="title-color">
-          <span className="visually-hidden">Cargando...</span>
-        </Spinner>
-        <p className="mt-2">Cargando discusión...</p>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando discusion...</span>
+          </Spinner>
+          <p className="mt-2">Cargando discusion...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center my-5 text-danger">
-        <p>{error}</p>
-        <Button variant="primary" onClick={() => setCurrentPage('forumsPage')}>Volver al foro</Button>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <p>{error}</p>
+          <Button variant="primary" onClick={() => setCurrentPage('forumsPage')}>Volver al foro</Button>
+        </div>
       </div>
     );
   }

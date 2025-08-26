@@ -63,20 +63,24 @@ const ForumsPage = ({ setCurrentPage }) => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando discusiones...</span>
-        </Spinner>
-        <p className="mt-2">Cargando discusiones...</p>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando discusiones...</span>
+          </Spinner>
+          <p className="mt-2">Cargando discusiones...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center my-5 text-danger">
-        <p>{error}</p>
-        <Button variant="primary" onClick={fetchDiscussions}>Reintentar</Button>
+      <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <p>{error}</p>
+          <Button variant="primary" onClick={fetchDiscussions}>Reintentar</Button>
+        </div>
       </div>
     );
   }
