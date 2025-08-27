@@ -24,14 +24,11 @@ const ForumsPage = ({ setCurrentPage }) => {
       const response = await api.get(urlDiscussions);
 
       if (!response.err && Array.isArray(response)) {
-        // Enriquecer cada discusión con autor y cantidad de respuestas
         const enriched = await Promise.all(
           response.map(async (disc) => {
-            // Obtener autor
             const user = await api.get(`${urlUsers}/${disc.usuario_id}`);
             const autor = user && !user.err ? `${user.nombre} ${user.apellido}` : 'Desconocido';
 
-            // Obtener respuestas
             const respuestas = await api.get(`${urlResponses}/${disc.id}`);
             const respuestas_count = respuestas && Array.isArray(respuestas) ? respuestas.length : 0;
 
@@ -43,7 +40,10 @@ const ForumsPage = ({ setCurrentPage }) => {
           })
         );
 
-        setDiscussions(enriched);
+        // ⭐ AÑADE ESTA LÍNEA para ordenar las discusiones
+        const sortedDiscussions = enriched.sort((a, b) => b.respuestas_count - a.respuestas_count);
+
+        setDiscussions(sortedDiscussions); // ⭐ Y CAMBIA 'enriched' a 'sortedDiscussions' aquí
         setError(null);
       } else {
         setError(response.statusText || 'Error al cargar las discusiones.');

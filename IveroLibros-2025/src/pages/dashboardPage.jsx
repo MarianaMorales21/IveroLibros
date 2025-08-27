@@ -26,6 +26,7 @@ const AdminDashboard = ({ user }) => {
     const [showBookEditModal, setShowBookEditModal] = useState(false);
     const [showBookDeleteModal, setShowBookDeleteModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
+    const [genreMap, setGenreMap] = useState({});
     const [newBookForm, setNewBookForm] = useState({
         titulo: '',
         autor: '',
@@ -37,7 +38,8 @@ const AdminDashboard = ({ user }) => {
         linkCompra: '',
         portada: '',
         descripcion: '',
-        usuario_id: ''
+        usuario_id: '',
+        estado: 'En revision',
     });
     const [editBookForm, setEditBookForm] = useState(null);
     const [genres, setGenres] = useState([]);
@@ -98,6 +100,17 @@ const AdminDashboard = ({ user }) => {
         }
     }, [activeAdminTab, fetchUsers, fetchBooks, fetchGenres]);
 
+    useEffect(() => {
+        if (genres.length > 0) {
+            const map = genres.reduce((acc, genre) => {
+                acc[genre.id] = genre.nombre;
+                return acc;
+            }, {});
+            setGenreMap(map);
+        }
+    }, [genres]);
+
+
     const handleClose = () => {
         setShowBookAddModal(false);
         setShowBookEditModal(false);
@@ -107,10 +120,10 @@ const AdminDashboard = ({ user }) => {
         setSelectedBook(null);
         setSelectedUser(null);
         setNewBookForm({
-            titulo: '', autor: '', año: '', genero_id: '', editorial: '', paginas: '', sinopsis: '', linkCompra: '', portada: '', descripcion: '', usuario_id: ''
+            titulo: '', autor: '', año: '', genero_id: '', editorial: '', paginas: '', sinopsis: '', linkCompra: '', portada: '', descripcion: '', usuario_id: '', estado: 'En revison'
         });
         setEditBookForm(null);
-        setEditUserForm(null); // Reiniciar el formulario de edición de usuario
+        setEditUserForm(null);
     };
 
     const handleShowBookAdd = () => setShowBookAddModal(true);
@@ -128,7 +141,8 @@ const AdminDashboard = ({ user }) => {
             linkCompra: book.linkCompra,
             portada: book.portada,
             descripcion: book.descripcion,
-            usuario_id: book.usuario_id
+            usuario_id: book.usuario_id,
+            estado: book.estado
         });
         setShowBookEditModal(true);
     };
@@ -140,7 +154,6 @@ const AdminDashboard = ({ user }) => {
 
     const handleShowUserEdit = (user) => {
         setSelectedUser(user);
-        // Formatear la fecha para que el input de tipo "date" la reconozca
         const formattedDate = user.fechaSuscripcion ? new Date(user.fechaSuscripcion).toISOString().split('T')[0] : '';
         setEditUserForm({
             suscripcion: user.suscripcion,
@@ -202,7 +215,7 @@ const AdminDashboard = ({ user }) => {
         }
     };
 
-    const handleEditUser = async (e) => { // Función de edición de usuario mejorada
+    const handleEditUser = async (e) => {
         e.preventDefault();
         try {
             const bodyData = { ...selectedUser, ...editUserForm };
@@ -312,9 +325,10 @@ const AdminDashboard = ({ user }) => {
                                             <th>Título</th>
                                             <th>Autor</th>
                                             <th>Año</th>
-                                            <th>Género ID</th>
+                                            <th>Género</th>
                                             <th>Editorial</th>
                                             <th>Páginas</th>
+                                            <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -325,9 +339,10 @@ const AdminDashboard = ({ user }) => {
                                                 <td>{book.titulo}</td>
                                                 <td>{book.autor}</td>
                                                 <td>{book.año}</td>
-                                                <td>{book.genero_id}</td>
+                                                <td>{genreMap[book.genero_id] || 'Desconocido'}</td>
                                                 <td>{book.editorial}</td>
                                                 <td>{book.paginas}</td>
+                                                <td>{book.estado}</td>
                                                 <td>
                                                     <Button
                                                         variant="primary"
@@ -494,6 +509,15 @@ const AdminDashboard = ({ user }) => {
                             <Form.Group className="mb-3">
                                 <Form.Label className='title-color-2'>URL de Portada</Form.Label>
                                 <Form.Control className="form-control-login" type="text" value={editBookForm?.portada || ''} onChange={(e) => setEditBookForm({ ...editBookForm, portada: e.target.value })} />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label className='title-color-2'>Estado</Form.Label>
+                                <Form.Select className="form-control-login" value={editBookForm?.estado || ''} onChange={(e) => setEditBookForm({ ...editBookForm, estado: e.target.value })}>
+                                    <option value="" disabled>Selecciona un género</option>
+                                    <option value="Aprobado">Aprobado</option>
+                                    <option value="En revision">En revision</option>
+                                    <option value="Denegado">Denegado</option>
+                                </Form.Select>
                             </Form.Group>
                             <Modal.Footer className='card-color'>
                                 <Button variant="danger" onClick={handleClose}>

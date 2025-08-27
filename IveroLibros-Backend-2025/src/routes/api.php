@@ -3,7 +3,7 @@ require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../controllers/AuthController.php";
 
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: http://192.168.101.5:5173");
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
@@ -56,7 +56,7 @@ if ($uri[0] === "libros") {
 }
 
 if ($uri[0] === "genero") {
-    require_once __DIR__ . "/genero.php";
+    require_once __DIR__ . "/gender.php";
     exit;
 }
 

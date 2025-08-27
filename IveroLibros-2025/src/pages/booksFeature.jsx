@@ -20,7 +20,9 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
       const response = await api.get(urlBooks);
 
       if (!response.err) {
-        setBooks(response || []);
+        // Filtra los libros para mostrar solo aquellos con estado 'aprobado'
+        const approvedBooks = (response || []).filter(book => book.estado === 'Aprobado');
+        setBooks(approvedBooks);
         setError(null);
       } else {
         setError(response.statusText || 'Error al cargar los libros.');
@@ -56,7 +58,6 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
       </div>
     );
   }
-
 
   if (books.length === 0) {
     return (
@@ -110,7 +111,7 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
                   <Card.Title>{book.titulo}</Card.Title>
                   <Card.Text className="text-muted">{book.descripcion}</Card.Text>
                   <div className="d-grid gap-2">
-                    <Button variant="primary">Comprar</Button>
+                    <Button variant="primary" href={book.linkCompra}>Comprar</Button>
                     <Button
                       variant="outline-primary"
                       onClick={() => {

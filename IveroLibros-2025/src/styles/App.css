@@ -61,8 +61,15 @@ body {
   border-color: #884615;
 }
 
+
 .btn-primary:hover {
   background-color: #6d3205ff !important;
+  color: white !important;
+  border-color: #6d3205ff !important;
+}
+
+.btn-primary:disabled{
+    background-color: #6d3205ff !important;
   color: white !important;
   border-color: #6d3205ff !important;
 }

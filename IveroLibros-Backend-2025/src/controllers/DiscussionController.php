@@ -1,19 +1,23 @@
 <?php
 require_once __DIR__ . '/../models/discussion.php';
 
-class DiscussionController {
+class DiscussionController
+{
     private $discussion;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->discussion = new Discussion($db);
     }
 
-    public function index() {
+    public function index()
+    {
         $discusiones = $this->discussion->getAll();
         echo json_encode($discusiones);
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $disc = $this->discussion->get($id);
         if ($disc) {
             echo json_encode($disc);
@@ -23,8 +27,9 @@ class DiscussionController {
         }
     }
 
-    public function store($data) {
-        if (!isset($data['titulo'], $data['contenido'], $data['autor'])) {
+    public function store($data)
+    {
+        if (!isset($data['titulo'], $data['contenido'], $data['usuario_id'])) {
             http_response_code(400);
             echo json_encode(["error" => "Datos incompletos"]);
             return;

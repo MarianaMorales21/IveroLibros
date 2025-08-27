@@ -35,14 +35,13 @@ const RegisterPage = ({ setCurrentPage }) => {
           apellido: lastName,
           email: email,
           contraseña: password,
-          rol: 'Administrador',
+          rol: 'Usuario',
           suscripcion: 'Ninguna',
           fechaSuscripcion: new Date().toISOString()
         }),
       });
 
       if (!response.ok) {
-        // Si el estado no es 200, leer el cuerpo del error y lanzar una excepción
         const errorData = await response.json();
         throw new Error(errorData.error || 'Ocurrió un error en el registro.');
       }

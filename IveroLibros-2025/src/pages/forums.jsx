@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { helpHttp } from '../helpHttp';
 
-const Forums = ({ setCurrentPage, pageProps }) => {
+const Forums = ({ setCurrentPage, pageProps, user }) => {
   const { id } = pageProps; // id de la discusión seleccionada
   const [discussion, setDiscussion] = useState(null);
   const [responses, setResponses] = useState([]);
@@ -45,6 +45,7 @@ const Forums = ({ setCurrentPage, pageProps }) => {
     try {
       const resResponse = await api.get(urlResponses);
       if (resResponse && Array.isArray(resResponse)) {
+        // Enriquecer las respuestas con el autor
         const enrichedResponses = await Promise.all(
           resResponse.map(async (resp) => {
             const respUser = await api.get(`http://localhost:8000/usuarios/${resp.usuario_id}`);
@@ -57,7 +58,15 @@ const Forums = ({ setCurrentPage, pageProps }) => {
             };
           })
         );
-        setResponses(enrichedResponses);
+
+        // Ordenar las respuestas por fecha de forma descendente (más recientes primero)
+        const sortedResponses = enrichedResponses.sort((a, b) => {
+          const dateA = new Date(a.hora);
+          const dateB = new Date(b.hora);
+          return dateB - dateA;
+        });
+
+        setResponses(sortedResponses);
       } else {
         setResponses([]);
       }
@@ -70,12 +79,18 @@ const Forums = ({ setCurrentPage, pageProps }) => {
     e.preventDefault();
     if (!newResponseText.trim()) return;
 
+    // Verificar si el usuario está logueado
+    if (!user || !user.id) {
+      setError('Debes iniciar sesión para enviar una respuesta.');
+      return;
+    }
+
     try {
       setSendingResponse(true);
       const response = await api.post('http://localhost:8000/respuestas', {
         body: {
           discusion_id: id,
-          usuario_id: 1, // aquí debería ser el usuario logueado
+          usuario_id: user.id, // ✅ Usamos el ID del usuario logueado
           respuesta: newResponseText,
           hora: new Date().toISOString(),
         },
@@ -113,7 +128,7 @@ const Forums = ({ setCurrentPage, pageProps }) => {
       <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
         <div className="text-center">
           <p>{error}</p>
-          <Button variant="primary" onClick={() => setCurrentPage('forumsPage')}>Volver al foro</Button>
+          <Button variant="primary" onClick={() => setCurrentPage('forums')}>Volver al foro</Button>
         </div>
       </div>
     );
@@ -123,7 +138,7 @@ const Forums = ({ setCurrentPage, pageProps }) => {
     return (
       <div className="text-center my-5">
         <p>Discusión no encontrada.</p>
-        <Button variant="primary" onClick={() => setCurrentPage('forumsPage')}>Volver al foro</Button>
+        <Button variant="primary" onClick={() => setCurrentPage('forums')}>Volver al foro</Button>
       </div>
     );
   }
@@ -162,14 +177,17 @@ const Forums = ({ setCurrentPage, pageProps }) => {
               className="rounded-3 forum-textarea form-control-login"
               value={newResponseText}
               onChange={(e) => setNewResponseText(e.target.value)}
-              disabled={sendingResponse}
+              disabled={sendingResponse || !user}
             />
           </Form.Group>
           <div className="text-end">
-            <Button variant="primary" type="submit" className="btn-send-response" disabled={sendingResponse}>
+            <Button variant="primary" type="submit" className="btn-send-response" disabled={sendingResponse || !user}>
               {sendingResponse ? 'Enviando...' : 'Enviar respuesta »'}
             </Button>
           </div>
+          {!user && (
+            <p className="text-danger mt-2">Debes iniciar sesión para poder responder.</p>
+          )}
         </Form>
         {responses.length > 0 ? responses.map((resp) => (
           <Card key={resp.id} className="mb-3 shadow-sm response-card bg-custom-yellow title-color-section">

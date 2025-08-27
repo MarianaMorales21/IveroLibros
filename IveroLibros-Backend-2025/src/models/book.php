@@ -16,6 +16,7 @@ class Libro
     public $portada;
     public $descripcion;
     public $usuario_id;
+    public $estado; // Nuevo campo
 
     public function __construct($db)
     {
@@ -25,9 +26,10 @@ class Libro
     // Obtener todos los libros
     public function getAll()
     {
+        // Se agregaron los nuevos campos 'estado' y 'id' en el SELECT para que coincidan con la base de datos y el frontend
         $query = "SELECT 
                 id, 
-                titulo AS title, 
+                titulo, 
                 autor, 
                 año, 
                 genero_id, 
@@ -35,10 +37,11 @@ class Libro
                 paginas, 
                 sinopsis, 
                 linkCompra, 
-                portada AS image, 
+                portada, 
                 descripcion, 
-                usuario_id 
-              FROM " . $this->table;
+                usuario_id,
+                estado 
+            FROM " . $this->table;
 
         $stmt = $this->conn->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -47,7 +50,8 @@ class Libro
     // Obtener libro por ID
     public function get($id)
     {
-        $query = "SELECT id, titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id FROM " . $this->table . " WHERE id = ?";
+        // Se agregó el campo 'estado' al SELECT
+        $query = "SELECT id, titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id, estado FROM " . $this->table . " WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -56,22 +60,75 @@ class Libro
     // Crear nuevo libro
     public function create($data)
     {
-        $query = "INSERT INTO " . $this->table . " (titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id)
-                  VALUES (:titulo, :autor, :año, :genero_id, :editorial, :paginas, :sinopsis, :linkCompra, :portada, :descripcion, :usuario_id)";
+        // Se agregaron 'estado' a la lista de columnas y al final del array de valores para la inserción
+        $query = "INSERT INTO " . $this->table . " 
+    (titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id, estado) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // Using positional placeholders
+
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([
-            ":titulo" => $data['titulo'],
-            ":autor" => $data['autor'],
-            ":año" => $data['año'],
-            ":genero" => $data['genero'],
-            ":editorial" => $data['editorial'],
-            ":paginas" => $data['paginas'],
-            ":sinopsis" => $data['sinopsis'],
-            ":linkCompra" => $data['linkCompra'],
-            ":portada" => $data['portada'], // Puede ser URL o base64
-            ":descripcion" => $data['descripcion'],
-            ":usuario_id" => $data['usuario_id']
+
+        // The execute method takes an array of values in the same order as the placeholders
+        return $stmt->execute([
+            $data['titulo'],
+            $data['autor'],
+            $data['año'],
+            $data['genero_id'],
+            $data['editorial'],
+            $data['paginas'],
+            $data['sinopsis'],
+            $data['linkCompra'],
+            $data['portada'],
+            $data['descripcion'],
+            $data['usuario_id'],
+            $data['estado'] // Nuevo valor
         ]);
-        return $this->conn->lastInsertId();
+    }
+
+    // Actualizar un libro
+    public function update($id, $data)
+    {
+        // Se agregó el campo 'estado' en el SET de la consulta
+        $query = "UPDATE " . $this->table . " SET 
+        titulo = ?, 
+        autor = ?, 
+        año = ?, 
+        genero_id = ?, 
+        editorial = ?, 
+        paginas = ?, 
+        sinopsis = ?, 
+        linkCompra = ?, 
+        portada = ?, 
+        descripcion = ?, 
+        usuario_id = ?,
+        estado = ? 
+    WHERE id = ?";
+
+        $params = [
+            $data['titulo'],
+            $data['autor'],
+            $data['año'],
+            $data['genero_id'],
+            $data['editorial'],
+            $data['paginas'],
+            $data['sinopsis'],
+            $data['linkCompra'],
+            $data['portada'],
+            $data['descripcion'],
+            $data['usuario_id'],
+            $data['estado'], // Nuevo valor
+            $id // The ID is the last parameter
+        ];
+
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute($params);
+    }
+
+    // Nuevo método para eliminar un libro
+    public function delete($id)
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$id]);
+        return $stmt->rowCount();
     }
 }
