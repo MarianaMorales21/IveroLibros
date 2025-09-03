@@ -3,7 +3,7 @@ import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
-const Footer = () => {
+const Footer = ({ setCurrentPage, }) => {
   return (
     <footer className="footer text-white py-5">
       <Container>
@@ -28,17 +28,17 @@ const Footer = () => {
             <Row>
               <Col sm={4}>
                 <Nav className="flex-column">
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Inicio</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Foro</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Libros Destacados</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Promocionar Libro</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('home')} className="text-white p-0 mb-2">Inicio</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('forums')} className="text-white p-0 mb-2">Foro</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('featured-books')} className="text-white p-0 mb-2">Libros Destacados</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('promote-book')} className="text-white p-0 mb-2">Promocionar Libro</Nav.Link>
                 </Nav>
               </Col>
               <Col sm={4}>
                 <Nav className="flex-column">
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Inicio Sesión</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Registro</Nav.Link>
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Suscripción</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('login')} className="text-white p-0 mb-2">Inicio Sesión</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('Register')} className="text-white p-0 mb-2">Registro</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('promote-book')} className="text-white p-0 mb-2">Suscripción</Nav.Link>
                 </Nav>
               </Col>
               <Col sm={4}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Alert, CardFooter } from 'react-bootstrap';
 // Importamos la utilidad para peticiones HTTP
 import { helpHttp } from '../helpHttp';
 
@@ -115,15 +115,14 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                     <h1 className="display-4 fw-bold title-color-2">Impulsa tu libro y</h1>
                     <h1 className="display-4 fw-bold title-color">conquista nuevos lectores</h1>
                     <p className="lead mt-3 text-secondary">
-                        ¡Da a conocer tu obra y llega a miles de lectores apasionados!
+                        ¡Da a conocer tu obra y llega a miles de lectores apasionados! <br />
                         Destaca tu libro en nuestra plataforma y conéctate con una comunidad de amantes de la lectura.
-                        Simplemente registra tu obra para comenzar. Tu libro entrará en estado de En revisión. Una vez que nuestro equipo de administradores lo revise y apruebe, el estado cambiará a Aprobado y tu libro será publicado en la plataforma para que todos puedan disfrutarlo.
-                        ¡Es hora de compartir tu historia!
                     </p>
                 </div>
                 <Row className="justify-content-center">
                     <Col md={7}>
                         {isPremium ? (
+
                             <Card className="p-4 shadow-sm bg-light-brown rounded">
                                 <h3 className="fw-bold mb-4 text-center title-color">Sube tu Libro para Promoción</h3>
                                 {message && <Alert variant={message.type}>{message.text}</Alert>}
@@ -269,6 +268,14 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                                         {isSubmitting ? 'Enviando...' : 'Enviar Libro para Promoción'}
                                     </Button>
                                 </Form>
+                                <CardFooter className='card-information'>
+                                    <div className="text-center mb-5 ">
+                                        <p className="lead mt-3 text-secondary">
+                                            Simplemente registra tu obra para comenzar. Tu libro entrará en estado de revisión. Una vez que nuestro equipo de administradores lo revise y apruebe, el estado cambiará a Aprobado y tu libro será publicado en la plataforma para que todos puedan disfrutarlo.
+                                            <br />¡Es hora de compartir tu historia!
+                                        </p>
+                                    </div>
+                                </CardFooter>
                             </Card>
                         ) : (
                             <>
@@ -287,13 +294,17 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                                         </p>
                                         <ul className="list-unstyled mb-4">
                                             <li><i className="bi bi-check-lg text-success me-2"></i>Promoción ilimitada de libros</li>
-                                            <li><i className="bi bi-check-lg text-success me-2"></i>Destacado en página principal</li>
-                                            <li><i className="bi bi-check-lg text-success me-2"></i>Estadísticas detalladas</li>
                                             <li><i className="bi bi-check-lg text-success me-2"></i>Soporte prioritario</li>
                                         </ul>
                                         <div className="d-flex justify-content-between align-items-center">
                                             <h4 className="fw-bold">$2 <small className="text-muted fw-normal">por mes (primer año)</small></h4>
-                                            <Button variant="primary" className="btn-upgrade">Actualizar Ahora →</Button>
+                                            <Button
+                                                variant="primary"
+                                                className="btn-upgrade"
+                                                onClick={() => window.open("https://wa.me/34722712716?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20suscripci%C3%B3n%20para%20publicar%20mi%20libro%20en%20IveroLibros.%20%C2%BFPodr%C3%ADan%20ayudarme%20con%20los%20detalles%3F", "_blank")}
+                                            >
+                                                Actualizar Ahora →
+                                            </Button>
                                         </div>
                                     </Card.Body>
                                 </Card>
@@ -307,7 +318,13 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                                         <p className="text-muted">
                                             Para acceder al formulario de promoción de libros,<br /> necesitas una suscripción premium activa.
                                         </p>
-                                        <Button variant="primary" className="btn-upgrade-inactive">Obtener Suscripción Premium</Button>
+                                        <Button
+                                            variant="primary"
+                                            className="btn-upgrade"
+                                            onClick={() => window.open("https://wa.me/34722712716?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20suscripci%C3%B3n%20para%20publicar%20mi%20libro%20en%20IveroLibros.%20%C2%BFPodr%C3%ADan%20ayudarme%20con%20los%20detalles%3F", "_blank")}
+                                        >
+                                            Obtener Suscripción Premium →
+                                        </Button>
                                     </Card.Body>
                                 </Card>
                             </>

@@ -1,6 +1,6 @@
 /* Estilos generales */
 body {
-  font-family: 'Roboto', sans-serif; /* Cambiado a tipografía Roboto */
+  font-family: 'Special Elite', monospace; /* Cambiado a tipografía Roboto.  font-family: 'Roboto', sans-serif;*/
   color: #4A4A4A; /* Color de texto más oscuro */
 }
 
@@ -250,7 +250,7 @@ body {
 }
 
 .title-forums-2{
-  margin-left:5%;
+  margin-left:0.8%;
   margin-top: 1.5%;
   color: #884615; /* Color marrón oscuro */
 }
@@ -415,6 +415,16 @@ body {
 .promote-book-page{
   background-color: #F4F4DA;
 }
+
+.card-information{
+  background-color: #F4F4DA;
+}
+
+.card-information div p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 
 /* dashboard*/
 .nav-tabs .nav-link {

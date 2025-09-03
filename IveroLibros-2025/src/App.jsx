@@ -116,7 +116,7 @@ function App() {
         handleLogout={handleLogout}
       />
       {renderPage()}
-      <Footer />
+      <Footer setCurrentPage={handleSetCurrentPage}/>
     </div>
   );
 }
