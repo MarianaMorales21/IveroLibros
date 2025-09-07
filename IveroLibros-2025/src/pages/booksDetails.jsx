@@ -8,7 +8,7 @@ const BookDetailsPage = ({ bookId, setCurrentPage }) => {
   const [error, setError] = useState(null);
 
   const api = helpHttp();
-  const urlBook = `http://localhost:8000/libros/${bookId}`; // ✅ detalle de un libro
+  const urlBook = `https://www.iverolibros.xyz/api/libros/${bookId}`; // ✅ detalle de un libro
 
   useEffect(() => {
     fetchBookDetails();

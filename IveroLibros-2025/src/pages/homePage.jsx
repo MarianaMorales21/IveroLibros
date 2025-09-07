@@ -17,10 +17,10 @@ const MainContent = ({ setCurrentPage }) => {
               <p className="lead mt-3">
                 Únete a IveroLibros, donde autores y lectores se encuentran para compartir pasiones, descubrir nuevos títulos y promocionar obras literarias en un ambiente acogedor y profesional.
               </p>
-              <div className="mt-4">
+              <div className="mt-4 ">
                 <Button
                   variant="primary"
-                  className="me-2"
+                  className="me-2 margin-button"
                   onClick={() => setCurrentPage('forums')}
                 >
                   Explora el foro
@@ -74,10 +74,7 @@ const MainContent = ({ setCurrentPage }) => {
             <Col lg={6} className="mb-4 mb-lg-0">
               <h2 className="fw-bold title-color">ÚNETE A NUESTRA COMUNIDAD</h2>
               <p className="mt-3">
-                Recibe las últimas noticias literarias, recomendaciones de libros y eventos exclusivos directamente en tu bandeja de entrada.
-              </p>
-              <p>
-                Más de 5,000 lectores ya forman parte de nuestra comunidad ••••• 4.9/5
+                En IveroLibros, te invitamos a ir más allá de la lectura solitaria. Nuestra plataforma no solo te permite explorar un extenso catálogo de libros, sino que te ofrece el espacio para conectar con otros lectores. Publica tus reseñas, participa en discusiones profundas sobre tus obras favoritas y debate ideas.
               </p>
               <Button variant="primary" onClick={() => setCurrentPage('register')}>Ir al Registro</Button>
             </Col>

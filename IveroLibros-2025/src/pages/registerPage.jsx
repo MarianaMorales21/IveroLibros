@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 
 const RegisterPage = ({ setCurrentPage }) => {
-  // 1. Estados para los campos del formulario
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Nuevo estado para controlar el cargando
 
-  // 2. Función para manejar el envío del formulario (modificada para usar fetch)
   const handleRegister = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Limpiar cualquier mensaje de error anterior
+    setErrorMessage('');
+    setSuccessMessage('');
+    setIsLoading(true); // Activa el estado de carga al iniciar el registro
 
-    // Validación: Asegurar que las contraseñas coincidan
     if (password !== repeatPassword) {
       setErrorMessage("Las contraseñas no coinciden");
+      setIsLoading(false); // Desactiva la carga si hay un error de validación
       return;
     }
 
     try {
-      // Petición a la API para registrar al usuario
-      const url = 'http://localhost:8000/usuarios';
+      const url = 'https://www.iverolibros.xyz/api/usuarios';
+      const userData = {
+        nombre: name,
+        apellido: lastName,
+        email: email,
+        contraseña: password,
+        rol: 'Usuario',
+        suscripcion: 'Ninguna',
+        fechaSuscripcion: new Date().toISOString()
+      };
+
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          nombre: name,
-          apellido: lastName,
-          email: email,
-          contraseña: password,
-          rol: 'Usuario',
-          suscripcion: 'Ninguna',
-          fechaSuscripcion: new Date().toISOString()
-        }),
+        body: JSON.stringify(userData),
       });
 
       if (!response.ok) {
@@ -46,15 +49,18 @@ const RegisterPage = ({ setCurrentPage }) => {
         throw new Error(errorData.error || 'Ocurrió un error en el registro.');
       }
 
-      // Si la respuesta es exitosa
-      const data = await response.json();
-      console.log('Registro exitoso:', data);
-      setCurrentPage('login'); // Redirige al usuario a la página de inicio de sesión
+      await response.json();
+      setSuccessMessage('¡Registro exitoso! Redirigiendo a la página de inicio de sesión...');
+
+      setTimeout(() => {
+        setCurrentPage('login');
+      }, 1500);
 
     } catch (error) {
       console.error('Error durante el registro:', error);
-      // Actualiza el mensaje de error del estado
       setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -70,7 +76,8 @@ const RegisterPage = ({ setCurrentPage }) => {
         <Row className="justify-content-center">
           <Col md={10} lg={8}>
             <Form onSubmit={handleRegister} className="p-4 rounded-3 shadow-sm">
-              {errorMessage && <div className="text-danger mb-3">{errorMessage}</div>}
+              {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+              {successMessage && <div className="alert alert-success">{successMessage}</div>}
 
               <Row>
                 <Col md={6}>
@@ -141,8 +148,21 @@ const RegisterPage = ({ setCurrentPage }) => {
                 <Form.Check type="checkbox" label="Acepto los Términos y Condiciones y la Política de Privacidad" required />
               </Form.Group>
 
-              <Button variant="primary" type="submit" className="w-100">
-                Crear Cuenta
+              <Button variant="primary" type="submit" className="w-100" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    <span className="ms-2">Cargando...</span>
+                  </>
+                ) : (
+                  "Crear Cuenta"
+                )}
               </Button>
               <div className="text-center mt-3">
                 ¿Ya tienes una cuenta? <a onClick={() => setCurrentPage('login')} className="register-login">Inicia sesión aquí</a>

@@ -31,7 +31,7 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
     const isPremium = userSubscriptionStatus === 'Premium';
 
     const fetchGeneros = useCallback(async () => {
-        const url = 'http://localhost:8000/genero';
+        const url = 'https://www.iverolibros.xyz/api/genero';
         setLoadingGeneros(true);
 
         try {
@@ -71,7 +71,7 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
         setIsSubmitting(true);
         setMessage(null);
 
-        const url = 'http://localhost:8000/libros';
+        const url = 'https://www.iverolibros.xyz/api/libros';
 
         const dataToSend = {
             titulo: formData.titulo,
@@ -92,7 +92,7 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
             const response = await api.post(url, { body: dataToSend });
 
             if (!response.err) {
-                setMessage({ type: 'success', text: '¡Tu libro ha sido enviado para promoción exitosamente!. El libro sera publicado al pasar la aprobacion del administrador' });
+                setMessage({ type: 'success', text: 'Tu libro ha sido enviado para revisión. Lo publicaremos en el sitio una vez que sea aprobado por el administrador.' });
                 setFormData({
                     titulo: '', autores: '', anio: '', genero: '', editorial: '', paginas: '', sinopsis: '', descripcion: '', linkCompra: '', portada: '', estado: 'En revision'
                 });
@@ -265,7 +265,7 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting ? 'Enviando...' : 'Enviar Libro para Promoción'}
+                                        {isSubmitting ? 'Cargando...' : 'Enviar Libro para Promoción'}
                                     </Button>
                                 </Form>
                                 <CardFooter className='card-information'>

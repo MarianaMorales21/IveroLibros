@@ -13,6 +13,8 @@ import BookDetailsPage from './pages/booksDetails';
 import Forums from './pages/forums';
 import AdminDashboard from './pages/dashboardPage';
 import PromoteBookPage from './pages/promotionBookPage';
+import ForgotPasswordPage from './pages/forgotPassword';
+import ResetPasswordPage from './pages/resetPassword';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -22,14 +24,29 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // 🔹 Al montar la App, revisamos si hay usuario guardado en localStorage
+  // 🔹 y manejamos la ruta de restablecimiento de contraseña desde la URL
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser.user);
       setIsLoggedIn(true);
-      setCurrentPage('home'); // lo mandamos al home automáticamente
     }
+
+    // ➡️ Lógica para leer la URL y actualizar el estado
+    const path = window.location.pathname;
+    if (path === '/reset-password') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      // Si la URL es /reset-password y tiene un token, navegamos a esa página
+      if (token) {
+        setCurrentPage('reset-password');
+      } else {
+        // Si no hay token, volvemos a la página de inicio para evitar errores
+        setCurrentPage('home');
+      }
+    }
+    // Si no es la ruta de restablecer contraseña, no hacemos nada y el estado inicial ('home') se mantiene
   }, []);
 
   const handleSetCurrentPage = (pageName, props = {}) => {
@@ -95,6 +112,13 @@ function App() {
         );
       case 'promote-book':
         return <PromoteBookPage userSubscriptionStatus={userSubscriptionStatus} user={user} />;
+      case 'forgot-password':
+        return <ForgotPasswordPage setCurrentPage={handleSetCurrentPage} />;
+      case 'reset-password': {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        return <ResetPasswordPage setCurrentPage={handleSetCurrentPage} token={token} />;
+      }
       case 'dashboard':
         return isAdmin ? (
           <AdminDashboard setCurrentPage={handleSetCurrentPage} user={user} />
@@ -116,7 +140,7 @@ function App() {
         handleLogout={handleLogout}
       />
       {renderPage()}
-      <Footer setCurrentPage={handleSetCurrentPage}/>
+      <Footer setCurrentPage={handleSetCurrentPage} />
     </div>
   );
 }

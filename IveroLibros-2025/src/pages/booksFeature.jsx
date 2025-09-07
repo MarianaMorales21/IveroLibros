@@ -12,8 +12,8 @@ const FeaturedBooksPage = ({ setCurrentPage, setSelectedBook }) => {
   const [error, setError] = useState(null);
 
   const api = helpHttp();
-  const urlBooks = 'http://localhost:8000/libros';
-  const urlGenres = 'http://localhost:8000/genero';
+  const urlBooks = 'https://www.iverolibros.xyz/api/libros';
+  const urlGenres = 'https://www.iverolibros.xyz/api/genero';
 
   useEffect(() => {
     fetchBooks();

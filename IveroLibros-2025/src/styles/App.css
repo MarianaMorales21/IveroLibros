@@ -61,6 +61,10 @@ body {
   border-color: #884615;
 }
 
+.margin-button{
+  margin-bottom: 5px;
+}
+
 
 .btn-primary:hover {
   background-color: #6d3205ff !important;

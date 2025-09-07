@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
-  const url = 'http://localhost:8000/login';
+  const url = 'https://www.iverolibros.xyz/api/login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -38,7 +38,6 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
       }
 
       const data = await response.json();
-      console.log('Inicio de sesión exitoso:', data);
 
       // Guardar en localStorage
       localStorage.setItem('user', JSON.stringify(data));
@@ -105,7 +104,7 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
 
               <div className="text-center mt-3">
                 <a
-                  onClick={() => setCurrentPage('forgotPassword')}
+                  onClick={() => setCurrentPage('forgot-password')}
                   className="register-login"
                 >
                   ¿Olvidaste tu contraseña?

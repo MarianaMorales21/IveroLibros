@@ -36,7 +36,7 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
         usuario_id: user.id,
       };
 
-      const response = await api.post('http://localhost:8000/discusiones', {
+      const response = await api.post('https://www.iverolibros.xyz/api/discusiones', {
         body: newDiscussion,
       });
 

@@ -46,7 +46,7 @@ const AdminDashboard = ({ user }) => {
 
     const fetchGenres = useCallback(async () => {
         try {
-            const response = await api.get('http://localhost:8000/genero');
+            const response = await api.get('https://www.iverolibros.xyz/api/genero');
             if (!response.err) {
                 setGenres(response);
             }
@@ -58,7 +58,7 @@ const AdminDashboard = ({ user }) => {
     const fetchUsers = useCallback(async () => {
         setLoadingUsers(true);
         try {
-            const response = await api.get('http://localhost:8000/usuarios');
+            const response = await api.get('https://www.iverolibros.xyz/api/usuarios');
             if (response.err) {
                 setErrorUsers(response.err.statusText || 'Error al cargar usuarios');
             } else {
@@ -76,7 +76,7 @@ const AdminDashboard = ({ user }) => {
     const fetchBooks = useCallback(async () => {
         setLoadingBooks(true);
         try {
-            const response = await api.get('http://localhost:8000/libros');
+            const response = await api.get('https://www.iverolibros.xyz/api/libros');
             if (response.err) {
                 setErrorBooks(response.err.statusText || 'Error al cargar libros');
             } else {
@@ -171,7 +171,7 @@ const AdminDashboard = ({ user }) => {
     const handleCreateBook = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('http://localhost:8000/libros', { body: newBookForm });
+            const response = await api.post('https://www.iverolibros.xyz/api/libros', { body: newBookForm });
             if (response.err) {
                 alert(`Error al crear libro: ${response.err.statusText}`);
             } else {
@@ -187,7 +187,7 @@ const AdminDashboard = ({ user }) => {
     const handleEditBook = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.put(`http://localhost:8000/libros/${editBookForm.id}`, { body: editBookForm });
+            const response = await api.put(`https://www.iverolibros.xyz/api/libros/${editBookForm.id}`, { body: editBookForm });
             if (response.err) {
                 alert(`Error al editar libro: ${response.err.statusText}`);
             } else {
@@ -202,7 +202,7 @@ const AdminDashboard = ({ user }) => {
 
     const handleDeleteBook = async () => {
         try {
-            const response = await api.del(`http://localhost:8000/libros/${selectedBook.id}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/libros/${selectedBook.id}`);
             if (response.err) {
                 alert(`Error al eliminar libro: ${response.err.statusText}`);
             } else {
@@ -219,7 +219,7 @@ const AdminDashboard = ({ user }) => {
         e.preventDefault();
         try {
             const bodyData = { ...selectedUser, ...editUserForm };
-            const response = await api.put(`http://localhost:8000/usuarios/${selectedUser.id}`, {
+            const response = await api.put(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`, {
                 body: bodyData
             });
             if (response.err) {
@@ -236,7 +236,7 @@ const AdminDashboard = ({ user }) => {
 
     const handleDeleteUser = async () => {
         try {
-            const response = await api.del(`http://localhost:8000/usuarios/${selectedUser.id}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`);
             if (response.err) {
                 alert(`Error al eliminar usuario: ${response.err.statusText}`);
             } else {

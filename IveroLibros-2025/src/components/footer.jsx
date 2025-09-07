@@ -37,13 +37,23 @@ const Footer = ({ setCurrentPage, }) => {
               <Col sm={4}>
                 <Nav className="flex-column">
                   <Nav.Link onClick={() => setCurrentPage('login')} className="text-white p-0 mb-2">Inicio Sesión</Nav.Link>
-                  <Nav.Link onClick={() => setCurrentPage('Register')} className="text-white p-0 mb-2">Registro</Nav.Link>
-                  <Nav.Link onClick={() => setCurrentPage('promote-book')} className="text-white p-0 mb-2">Suscripción</Nav.Link>
+                  <Nav.Link onClick={() => setCurrentPage('register')} className="text-white p-0 mb-2">Registro</Nav.Link>
+                  <Nav.Link
+                    onClick={() => window.open("https://wa.me/34722712716?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n...", "_blank")}
+                    className="text-white p-0 mb-2"
+                  >
+                    Suscripción
+                  </Nav.Link>
                 </Nav>
               </Col>
               <Col sm={4}>
                 <Nav className="flex-column">
-                  <Nav.Link href="#" className="text-white p-0 mb-2">Contáctanos</Nav.Link>
+                  <Nav.Link
+                    onClick={() => window.open("https://wa.me/34722712716?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n...", "_blank")}
+                    className="text-white p-0 mb-2"
+                  >
+                    Contactanos
+                  </Nav.Link>
                   <Nav.Link href="#" className="text-white p-0 mb-2">Aviso Legal</Nav.Link>
                   <Nav.Link href="#" className="text-white p-0 mb-2">Política de Privacidad</Nav.Link>
                 </Nav>
