@@ -8,9 +8,9 @@ const ForumsPage = ({ setCurrentPage }) => {
   const [error, setError] = useState(null);
 
   const api = helpHttp();
-  const urlDiscussions = 'https://www.iverolibros.xyz/api/discusiones';
-  const urlUsers = 'https://www.iverolibros.xyz/api/usuarios';
-  const urlResponses = 'https://www.iverolibros.xyz/api/respuestas';
+  const urlDiscussions = 'http://localhost:8000/discusiones';
+  const urlUsers = 'http://localhost:8000/usuarios';
+  const urlResponses = 'http://localhost:8000/respuestas';
 
   useEffect(() => {
     fetchDiscussions();
@@ -43,7 +43,7 @@ const ForumsPage = ({ setCurrentPage }) => {
         // ⭐ AÑADE ESTA LÍNEA para ordenar las discusiones
         const sortedDiscussions = enriched.sort((a, b) => b.respuestas_count - a.respuestas_count);
 
-        setDiscussions(sortedDiscussions); 
+        setDiscussions(sortedDiscussions);
         setError(null);
       } else {
         setError(response.statusText || 'Error al cargar las discusiones.');

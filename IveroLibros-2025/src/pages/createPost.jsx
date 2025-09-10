@@ -145,11 +145,19 @@ const CreatePostPage = ({ setCurrentPage, user }) => {
                       'Publicar Discusión »'
                     )}
                   </Button>
+
                 </div>
               </Form>
+
             </Card>
+            <div className="mt-4">
+              <Button variant="outline-primary" onClick={() => setCurrentPage('forums')}>
+                Volver al foro
+              </Button>
+            </div>
           </Col>
         </Row>
+
       </Container>
     </div>
   );
