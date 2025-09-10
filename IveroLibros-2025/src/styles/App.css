@@ -4,6 +4,17 @@ body {
   color: #4A4A4A; /* Color de texto más oscuro */
 }
 
+.loading-screen {
+  display: flex; /* Utiliza Flexbox para centrar el contenido */
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical */
+  min-height: 50vh; /* Opcional: Dale una altura mínima para que se vea bien en pantallas cortas */
+  flex-direction: column;
+  padding: 2rem;
+}
+
+
+
 /* Navbar */
 
 

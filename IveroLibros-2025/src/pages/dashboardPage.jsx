@@ -4,46 +4,78 @@ import { helpHttp } from '../helpHttp';
 
 const AdminDashboard = ({ user }) => {
     const [activeAdminTab, setActiveAdminTab] = useState('usuarios');
-
     const api = useMemo(() => helpHttp(), []);
 
-    // ---------------- Usuarios ----------------
+    // Estados para la Cita
+    const [quoteData, setQuoteData] = useState({ frase: '', autor: '' });
+    const [loadingQuote, setLoadingQuote] = useState(false);
+    const [errorQuote, setErrorQuote] = useState(null);
+    const [showQuoteEditModal, setShowQuoteEditModal] = useState(false);
+
+    // Estados para Usuarios
     const [users, setUsers] = useState([]);
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [errorUsers, setErrorUsers] = useState(null);
-
     const [showUserEditModal, setShowUserEditModal] = useState(false);
     const [showUserDeleteModal, setShowUserDeleteModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [editUserForm, setEditUserForm] = useState(null); // Nuevo estado para el formulario completo
+    const [editUserForm, setEditUserForm] = useState(null);
 
-    // ---------------- Libros ----------------
+    // Estados para Libros
     const [books, setBooks] = useState([]);
     const [loadingBooks, setLoadingBooks] = useState(false);
     const [errorBooks, setErrorBooks] = useState(null);
-
     const [showBookAddModal, setShowBookAddModal] = useState(false);
     const [showBookEditModal, setShowBookEditModal] = useState(false);
     const [showBookDeleteModal, setShowBookDeleteModal] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
     const [genreMap, setGenreMap] = useState({});
     const [newBookForm, setNewBookForm] = useState({
-        titulo: '',
-        autor: '',
-        año: '',
-        genero_id: '',
-        editorial: '',
-        paginas: '',
-        sinopsis: '',
-        linkCompra: '',
-        portada: '',
-        descripcion: '',
-        usuario_id: '',
+        titulo: '', autor: '', año: '', genero_id: '', editorial: '', paginas: '',
+        sinopsis: '', linkCompra: '', portada: '', descripcion: '', usuario_id: '',
         estado: 'En revision',
     });
     const [editBookForm, setEditBookForm] = useState(null);
     const [genres, setGenres] = useState([]);
 
+
+    const fetchQuote = useCallback(async () => {
+        setLoadingQuote(true);
+        try {
+            const response = await api.get('https://www.iverolibros.xyz/api/frase');
+            if (response.err) {
+                setErrorQuote(response.err.statusText || 'Error al cargar la cita');
+            } else {
+                setQuoteData(response);
+                setErrorQuote(null);
+            }
+        } catch (error) {
+            console.error("Error en la petición de la cita:", error);
+            setErrorQuote('Error de red al conectar con la API.');
+        } finally {
+            setLoadingQuote(false);
+        }
+    }, [api]);
+
+    const handleEditQuote = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.post('https://www.iverolibros.xyz/api/frase/update', {
+                body: quoteData
+            });
+            if (response.err) {
+                alert(`Error al editar la cita: ${response.err.statusText}`);
+            } else {
+                handleClose();
+                fetchQuote();
+            }
+        } catch (error) {
+            console.error("Error al editar la cita:", error);
+            alert('Error de red al editar la cita.');
+        }
+    };
+
+    // Géneros
     const fetchGenres = useCallback(async () => {
         try {
             const response = await api.get('https://www.iverolibros.xyz/api/genero');
@@ -55,6 +87,7 @@ const AdminDashboard = ({ user }) => {
         }
     }, [api]);
 
+    // Usuarios
     const fetchUsers = useCallback(async () => {
         setLoadingUsers(true);
         try {
@@ -73,6 +106,39 @@ const AdminDashboard = ({ user }) => {
         }
     }, [api]);
 
+    const handleEditUser = async (e) => {
+        e.preventDefault();
+        try {
+            const bodyData = { ...selectedUser, ...editUserForm };
+            const response = await api.put(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`, { body: bodyData });
+            if (response.err) {
+                alert(`Error al editar usuario: ${response.err.statusText}`);
+            } else {
+                handleClose();
+                fetchUsers();
+            }
+        } catch (error) {
+            console.error("Error al editar usuario:", error);
+            alert('Error de red al editar usuario.');
+        }
+    };
+
+    const handleDeleteUser = async () => {
+        try {
+            const response = await api.del(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`);
+            if (response.err) {
+                alert(`Error al eliminar usuario: ${response.err.statusText}`);
+            } else {
+                handleClose();
+                fetchUsers();
+            }
+        } catch (error) {
+            console.error("Error al eliminar usuario:", error);
+            alert('Error de red al eliminar usuario.');
+        }
+    };
+
+    // Libros
     const fetchBooks = useCallback(async () => {
         setLoadingBooks(true);
         try {
@@ -90,83 +156,6 @@ const AdminDashboard = ({ user }) => {
             setLoadingBooks(false);
         }
     }, [api]);
-
-    useEffect(() => {
-        if (activeAdminTab === 'usuarios') {
-            fetchUsers();
-        } else if (activeAdminTab === 'libros') {
-            fetchBooks();
-            fetchGenres();
-        }
-    }, [activeAdminTab, fetchUsers, fetchBooks, fetchGenres]);
-
-    useEffect(() => {
-        if (genres.length > 0) {
-            const map = genres.reduce((acc, genre) => {
-                acc[genre.id] = genre.nombre;
-                return acc;
-            }, {});
-            setGenreMap(map);
-        }
-    }, [genres]);
-
-
-    const handleClose = () => {
-        setShowBookAddModal(false);
-        setShowBookEditModal(false);
-        setShowBookDeleteModal(false);
-        setShowUserEditModal(false);
-        setShowUserDeleteModal(false);
-        setSelectedBook(null);
-        setSelectedUser(null);
-        setNewBookForm({
-            titulo: '', autor: '', año: '', genero_id: '', editorial: '', paginas: '', sinopsis: '', linkCompra: '', portada: '', descripcion: '', usuario_id: '', estado: 'En revison'
-        });
-        setEditBookForm(null);
-        setEditUserForm(null);
-    };
-
-    const handleShowBookAdd = () => setShowBookAddModal(true);
-    const handleShowBookEdit = (book) => {
-        setSelectedBook(book);
-        setEditBookForm({
-            id: book.id,
-            titulo: book.titulo,
-            autor: book.autor,
-            año: book.año,
-            genero_id: book.genero_id,
-            editorial: book.editorial,
-            paginas: book.paginas,
-            sinopsis: book.sinopsis,
-            linkCompra: book.linkCompra,
-            portada: book.portada,
-            descripcion: book.descripcion,
-            usuario_id: book.usuario_id,
-            estado: book.estado
-        });
-        setShowBookEditModal(true);
-    };
-
-    const handleShowBookDelete = (book) => {
-        setSelectedBook(book);
-        setShowBookDeleteModal(true);
-    };
-
-    const handleShowUserEdit = (user) => {
-        setSelectedUser(user);
-        const formattedDate = user.fechaSuscripcion ? new Date(user.fechaSuscripcion).toISOString().split('T')[0] : '';
-        setEditUserForm({
-            suscripcion: user.suscripcion,
-            rol: user.rol,
-            fechaSuscripcion: formattedDate
-        });
-        setShowUserEditModal(true);
-    };
-
-    const handleShowUserDelete = (user) => {
-        setSelectedUser(user);
-        setShowUserDeleteModal(true);
-    };
 
     const handleCreateBook = async (e) => {
         e.preventDefault();
@@ -215,40 +204,30 @@ const AdminDashboard = ({ user }) => {
         }
     };
 
-    const handleEditUser = async (e) => {
-        e.preventDefault();
-        try {
-            const bodyData = { ...selectedUser, ...editUserForm };
-            const response = await api.put(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`, {
-                body: bodyData
-            });
-            if (response.err) {
-                alert(`Error al editar usuario: ${response.err.statusText}`);
-            } else {
-                handleClose();
-                fetchUsers();
-            }
-        } catch (error) {
-            console.error("Error al editar usuario:", error);
-            alert('Error de red al editar usuario.');
-        }
-    };
 
-    const handleDeleteUser = async () => {
-        try {
-            const response = await api.del(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`);
-            if (response.err) {
-                alert(`Error al eliminar usuario: ${response.err.statusText}`);
-            } else {
-                handleClose();
-                fetchUsers();
-            }
-        } catch (error) {
-            console.error("Error al eliminar usuario:", error);
-            alert('Error de red al eliminar usuario.');
+    useEffect(() => {
+        if (activeAdminTab === 'usuarios') {
+            fetchUsers();
+        } else if (activeAdminTab === 'libros') {
+            fetchBooks();
+            fetchGenres();
+        } else if (activeAdminTab === 'frase') {
+            fetchQuote();
         }
-    };
+    }, [activeAdminTab, fetchUsers, fetchBooks, fetchGenres, fetchQuote]);
 
+    // Efecto: Mapear géneros por ID
+    useEffect(() => {
+        if (genres.length > 0) {
+            const map = genres.reduce((acc, genre) => {
+                acc[genre.id] = genre.nombre;
+                return acc;
+            }, {});
+            setGenreMap(map);
+        }
+    }, [genres]);
+
+    // Efecto: Asignar usuario al formulario de nuevo libro
     useEffect(() => {
         if (showBookAddModal && user) {
             setNewBookForm(prevForm => ({
@@ -257,6 +236,72 @@ const AdminDashboard = ({ user }) => {
             }));
         }
     }, [showBookAddModal, user]);
+
+    // =========================================================================
+    // ------------------- 4. FUNCIONES DE MANEJO DE LA UI -------------------
+    // =========================================================================
+
+    const handleClose = () => {
+        setShowBookAddModal(false);
+        setShowBookEditModal(false);
+        setShowBookDeleteModal(false);
+        setShowUserEditModal(false);
+        setShowUserDeleteModal(false);
+        setShowQuoteEditModal(false);
+        setSelectedBook(null);
+        setSelectedUser(null);
+        setNewBookForm({
+            titulo: '', autor: '', año: '', genero_id: '', editorial: '', paginas: '', sinopsis: '', linkCompra: '', portada: '', descripcion: '', usuario_id: '', estado: 'En revison'
+        });
+        setEditBookForm(null);
+        setEditUserForm(null);
+    };
+
+    // Funciones para mostrar modales de libros
+    const handleShowBookAdd = () => setShowBookAddModal(true);
+    const handleShowBookEdit = (book) => {
+        setSelectedBook(book);
+        setEditBookForm({
+            id: book.id, titulo: book.titulo, autor: book.autor, año: book.año, genero_id: book.genero_id,
+            editorial: book.editorial, paginas: book.paginas, sinopsis: book.sinopsis,
+            linkCompra: book.linkCompra, portada: book.portada, descripcion: book.descripcion,
+            usuario_id: book.usuario_id, estado: book.estado
+        });
+        setShowBookEditModal(true);
+    };
+    const handleShowBookDelete = (book) => {
+        setSelectedBook(book);
+        setShowBookDeleteModal(true);
+    };
+
+    // Funciones para mostrar modales de usuarios
+    const handleShowUserEdit = (user) => {
+        setSelectedUser(user);
+        const fecha = user.fechaSuscripcion;
+        let formattedDate = '';
+        if (fecha && typeof fecha === 'string' && fecha.trim() !== '') {
+            const dateObj = new Date(fecha);
+            if (!isNaN(dateObj.getTime())) {
+                formattedDate = dateObj.toISOString().split('T')[0];
+            }
+        }
+        setEditUserForm({
+            suscripcion: user.suscripcion, rol: user.rol, fechaSuscripcion: formattedDate
+        });
+        setShowUserEditModal(true);
+    };
+    const handleShowUserDelete = (user) => {
+        setSelectedUser(user);
+        setShowUserDeleteModal(true);
+    };
+
+    // Función para mostrar modal de cita
+    const handleShowQuoteEdit = () => {
+        setShowQuoteEditModal(true);
+    };
+
+
+
 
     const renderAdminSection = () => {
         switch (activeAdminTab) {
@@ -292,10 +337,10 @@ const AdminDashboard = ({ user }) => {
                                                 <td>{user.fechaSuscripcion}</td>
                                                 <td>{user.email}</td>
                                                 <td>
-                                                    <Button size="sm" className="me-2" onClick={() => handleShowUserEdit(user)}>
+                                                    <Button size="sm" className="me-2 margin-button" onClick={() => handleShowUserEdit(user)}>
                                                         Editar
                                                     </Button>
-                                                    <Button size="sm" variant="danger" onClick={() => handleShowUserDelete(user)}>
+                                                    <Button size="sm" variant="danger" className='margin-button' onClick={() => handleShowUserDelete(user)}>
                                                         Eliminar
                                                     </Button>
                                                 </td>
@@ -347,14 +392,15 @@ const AdminDashboard = ({ user }) => {
                                                     <Button
                                                         variant="primary"
                                                         size="sm"
-                                                        className="me-1"
+                                                        className="me-1 margin-button"
                                                         onClick={() => handleShowBookEdit(book)}
                                                     >
                                                         Editar
                                                     </Button>
                                                     <Button
-                                                        variant="danger"
+                                                        variant="danger "
                                                         size="sm"
+                                                        className='margin-button'
                                                         onClick={() => handleShowBookDelete(book)}
                                                     >
                                                         Eliminar
@@ -364,6 +410,27 @@ const AdminDashboard = ({ user }) => {
                                         ))}
                                     </tbody>
                                 </Table>
+                            )}
+                        </Card.Body>
+                    </Card>
+                );
+            case 'frase':
+                return (
+                    <Card className="shadow-sm mt-3">
+                        <Card.Header className="d-flex justify-content-between align-items-center fw-bold title-color-2">
+                            Gestión de la Frase Principal
+                            <Button variant="outline-primary" size="sm" onClick={handleShowQuoteEdit}>Editar Frase</Button>
+                        </Card.Header>
+                        <Card.Body>
+                            {loadingQuote && <div className="text-center my-5"><Spinner animation="border" /><p>Cargando frase...</p></div>}
+                            {errorQuote && <Alert variant="danger">{errorQuote}</Alert>}
+                            {!loadingQuote && !errorQuote && (
+                                <div className="text-center">
+                                    <blockquote className="blockquote">
+                                        <p className="mb-0 fs-4 fw-bold">{quoteData.frase}</p>
+                                        <footer className="blockquote-footer mt-2">{quoteData.autor}</footer>
+                                    </blockquote>
+                                </div>
                             )}
                         </Card.Body>
                     </Card>
@@ -388,6 +455,15 @@ const AdminDashboard = ({ user }) => {
                         <Nav.Link eventKey="libros" onClick={() => setActiveAdminTab('libros')}
                             className={activeAdminTab === 'libros' ? 'tab-active' : ''}
                         >Libros</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link
+                            eventKey="frase"
+                            onClick={() => setActiveAdminTab('frase')}
+                            className={activeAdminTab === 'frase' ? 'tab-active' : ''}
+                        >
+                            Frase
+                        </Nav.Link>
                     </Nav.Item>
                 </Nav>
                 {renderAdminSection()}
@@ -451,6 +527,45 @@ const AdminDashboard = ({ user }) => {
                             </Button>
                             <Button variant="primary" type="submit">
                                 Guardar Libro
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={showQuoteEditModal} onHide={handleClose}>
+                <Modal.Header className='card-color' closeButton>
+                    <Modal.Title className="fw-bold title-color">Editar Frase Principal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className='card-color'>
+                    <Form onSubmit={handleEditQuote}>
+                        <Form.Group className="mb-3">
+                            <Form.Label className='title-color-2'>Frase</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={quoteData.frase}
+                                className="form-control-login"
+                                onChange={(e) => setQuoteData({ ...quoteData, frase: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label className='title-color-2'>Autor</Form.Label>
+                            <Form.Control
+                                type="text"
+                                className="form-control-login"
+                                value={quoteData.autor}
+                                onChange={(e) => setQuoteData({ ...quoteData, autor: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+                        <Modal.Footer className='card-color'>
+                            <Button variant="danger" onClick={handleClose}>
+                                Cancelar
+                            </Button>
+                            <Button variant="primary" type="submit">
+                                Guardar Cambios
                             </Button>
                         </Modal.Footer>
                     </Form>

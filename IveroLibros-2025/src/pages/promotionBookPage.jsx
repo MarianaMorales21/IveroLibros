@@ -229,7 +229,7 @@ const PromoteBookPage = ({ userSubscriptionStatus, user }) => {
                                             as="textarea"
                                             rows={4}
                                             name="descripcion"
-                                            placeholder="Añade una descripción más detallada del libro..."
+                                            placeholder="Agrega una breve y clara descripción de tu libro..."
                                             value={formData.descripcion}
                                             onChange={handleChange}
                                             required

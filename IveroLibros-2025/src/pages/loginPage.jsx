@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 
 const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
   const url = 'https://www.iverolibros.xyz/api/login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Nuevo estado de carga
 
   // Verificar si ya hay sesión activa
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
       const parsedUser = JSON.parse(loggedInUser);
-      onLoginSuccess(parsedUser.user);  // restaurar usuario
-      setCurrentPage('home');          // mandar al dashboard
+      onLoginSuccess(parsedUser.user);
+      setCurrentPage('home');
     }
   }, [setCurrentPage, onLoginSuccess]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMessage('');
+    setIsLoading(true); // <--- Inicia el estado de carga
 
     try {
       const response = await fetch(url, {
@@ -45,10 +47,11 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
       // Notificar a la app y redirigir
       onLoginSuccess(data.user);
       setCurrentPage('home');
-
     } catch (error) {
       console.error('Error durante el inicio de sesión:', error);
       setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false); // <--- Desactiva el estado de carga
     }
   };
 
@@ -74,6 +77,7 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </Form.Group>
 
@@ -86,17 +90,32 @@ const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </Form.Group>
 
               <div className="d-grid gap-2 mt-4">
-                <Button variant="primary" type="submit" size="lg">
-                  Inicia Sesion
+                <Button variant="primary" type="submit" size="lg" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                      <span className="ms-2">Cargando...</span>
+                    </>
+                  ) : (
+                    "Inicia Sesion"
+                  )}
                 </Button>
                 <Button
                   variant="outline-primary"
                   size="lg"
                   onClick={() => setCurrentPage('register')}
+                  disabled={isLoading}
                 >
                   Registrarse
                 </Button>

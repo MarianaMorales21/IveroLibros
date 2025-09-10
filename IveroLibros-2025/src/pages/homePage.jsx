@@ -1,10 +1,42 @@
-import React from 'react';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Card, Spinner } from 'react-bootstrap';
 
 const MainContent = ({ setCurrentPage }) => {
+  // Estado para los datos de la cita y su carga
+  const [quoteData, setQuoteData] = useState({ frase: '', autor: '' });
+  const [loadingQuote, setLoadingQuote] = useState(true);
+
+  // Efecto para cargar la cita
+  useEffect(() => {
+    // Establece el estado de carga solo para la cita
+    setLoadingQuote(true);
+    fetch('https://www.iverolibros.xyz/api/frase')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al cargar la cita');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setQuoteData(data);
+      })
+      .catch(error => {
+        console.error('Error fetching quote:', error);
+        // Si hay un error, puedes mostrar un mensaje predeterminado
+        setQuoteData({
+          frase: 'No hay frase disponible. Intente de nuevo más tarde.',
+          autor: 'Error en el servidor'
+        });
+      })
+      .finally(() => {
+        // Independientemente del resultado, la carga de la cita ha terminado
+        setLoadingQuote(false);
+      });
+  }, []);
+
   return (
     <>
-      {/* Sección Hero */}
+      {/* Sección Hero - Se renderiza inmediatamente */}
       <div className="hero-section py-5">
         <Container>
           <Row className="align-items-center">
@@ -37,7 +69,7 @@ const MainContent = ({ setCurrentPage }) => {
         </Container>
       </div>
 
-      {/* Sección de Contenido */}
+      {/* Sección de Contenido - Se renderiza inmediatamente */}
       <div className="content-section py-5">
         <Container>
           <Row className="g-4">
@@ -80,12 +112,19 @@ const MainContent = ({ setCurrentPage }) => {
             </Col>
             <Col lg={6} className="text-center text-lg-end">
               <blockquote className="blockquote">
-                <p className="mb-0 fs-4 fw-bold">
-                  "El que lee mucho y anda mucho, ve mucho y sabe mucho."
-                </p>
-                <footer className="blockquote-footer mt-2">
-                  Miguel de Cervantes
-                </footer>
+                {/* Muestra el cargando solo en el bloque de la cita */}
+                {loadingQuote ? (
+                  <div className="text-center">
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Cargando frase...</span>
+                    </Spinner>
+                  </div>
+                ) : (
+                  <>
+                    <p className="mb-0 fs-4 fw-bold">{quoteData.frase}</p>
+                    <footer className="blockquote-footer mt-2">{quoteData.autor}</footer>
+                  </>
+                )}
               </blockquote>
             </Col>
           </Row>

@@ -43,7 +43,7 @@ const ForumsPage = ({ setCurrentPage }) => {
         // ⭐ AÑADE ESTA LÍNEA para ordenar las discusiones
         const sortedDiscussions = enriched.sort((a, b) => b.respuestas_count - a.respuestas_count);
 
-        setDiscussions(sortedDiscussions); // ⭐ Y CAMBIA 'enriched' a 'sortedDiscussions' aquí
+        setDiscussions(sortedDiscussions); 
         setError(null);
       } else {
         setError(response.statusText || 'Error al cargar las discusiones.');
