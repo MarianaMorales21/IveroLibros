@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 
 const LoginPage = ({ setCurrentPage, onLoginSuccess }) => {
-  const url = 'https://www.iverolibros.xyz/api/login';
+  const url = 'http://localhost:8000/login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');

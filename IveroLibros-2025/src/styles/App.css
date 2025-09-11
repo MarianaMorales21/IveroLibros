@@ -478,9 +478,31 @@ body {
   background-color: #F3F3D9; 
 }
 
+.lista-discusion{
+  background-color: #F3F3D9 !important; /* Color de fondo más claro */
+  border-radius: 0.5rem;
+  border: 0.5px solid #d6d1cbff !important; /* Borde más suave */
+}
+
+.discusion-none{
+  background-color: #F3F3D9 !important; /* Color de fondo más claro */
+  border-radius: 0.5rem;
+  color: black !important; /* Borde más suave */
+  border: 0.5px solid #d6d1cbff !important; /* Borde más suave */
+}
+
+.margin-response{
+  margin-bottom: 10px;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 991.98px) {
   .hero-section .img-container {
     margin-top: 2rem;
+  }
+
+  .margin-button-dashboard{
+    margin-bottom: 5px;
   }
 }
