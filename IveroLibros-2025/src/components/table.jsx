@@ -41,7 +41,7 @@ const AdminTable = ({ data, columns, actions, loading, error, onRetry, title }) 
                                     <Button
                                         key={actionIndex}
                                         size="sm"
-                                        className="me-2 margin-button"
+                                        className="me-2 margin-response"
                                         variant={action.variant || "primary"}
                                         onClick={() => action.handler(item)}
                                     >

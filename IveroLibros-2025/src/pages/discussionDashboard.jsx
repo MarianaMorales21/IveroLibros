@@ -25,18 +25,28 @@ const DiscussionManagement = () => {
     // Estado para mensajes de éxito
     const [successMessage, setSuccessMessage] = useState(null);
 
-    const fetchDiscusiones = useCallback(async () => {
+    const fetchDiscusionesAndUsers = useCallback(async () => {
         setLoadingDiscusiones(true);
         try {
-            const response = await api.get('https://www.iverolibros.xyz/api/discusiones');
-            if (response.err) {
-                setErrorDiscusiones(response.err.statusText || 'Error al cargar discusiones');
+            const [discusionesData, usersData] = await Promise.all([
+                api.get('https://www.iverolibros.xyz/api/discusiones'),
+                api.get('https://www.iverolibros.xyz/api/usuarios')
+            ]);
+
+            if (discusionesData.err) {
+                setErrorDiscusiones(discusionesData.err.statusText || 'Error al cargar discusiones');
             } else {
-                setDiscusiones(response);
+                // Modificación: se concatena el nombre y el apellido del usuario
+                const usersMap = new Map(usersData.map(user => [user.id, `${user.nombre} ${user.apellido}`]));
+                const discusionesWithUsernames = discusionesData.map(discusion => ({
+                    ...discusion,
+                    usuario_nombre: usersMap.get(discusion.usuario_id) || 'Desconocido',
+                }));
+                setDiscusiones(discusionesWithUsernames);
                 setErrorDiscusiones(null);
             }
         } catch (error) {
-            console.error("Error en la petición de discusiones:", error);
+            console.error("Error en la petición de datos:", error);
             setErrorDiscusiones('Error de red al conectar con la API.');
         } finally {
             setLoadingDiscusiones(false);
@@ -63,8 +73,8 @@ const DiscussionManagement = () => {
     }, [api]);
 
     useEffect(() => {
-        fetchDiscusiones();
-    }, [fetchDiscusiones]);
+        fetchDiscusionesAndUsers();
+    }, [fetchDiscusionesAndUsers]);
 
     const handleClose = useCallback(() => {
         setShowDeleteModal(false);
@@ -79,7 +89,6 @@ const DiscussionManagement = () => {
         e.preventDefault();
         if (!selectedDiscusion) return;
         try {
-            // Check for replies first
             const repliesResponse = await api.get(`https://www.iverolibros.xyz/api/respuestas/${selectedDiscusion.id}`);
             if (repliesResponse && repliesResponse.length > 0) {
                 setDeleteModalMessage('No puedes eliminar esta discusión porque tiene respuestas asociadas. Por favor, borra las respuestas primero.');
@@ -88,14 +97,16 @@ const DiscussionManagement = () => {
 
             const deleteResponse = await api.del(`https://www.iverolibros.xyz/api/discusiones/${selectedDiscusion.id}`);
             if (deleteResponse.err) {
-                alert(`Error al eliminar discusión: ${deleteResponse.err.statusText}`);
+                // Reemplazando `alert` con un mensaje en el modal o un estado de error
+                setDeleteModalMessage(`Error al eliminar discusión: ${deleteResponse.err.statusText}`);
             } else {
                 handleClose();
-                fetchDiscusiones();
+                fetchDiscusionesAndUsers();
             }
         } catch (error) {
             console.error("Error al eliminar discusión:", error);
-            alert('Error de red al eliminar discusión.');
+            // Reemplazando `alert` con un mensaje en el modal o un estado de error
+            setDeleteModalMessage('Error de red al eliminar discusión.');
         }
     };
 
@@ -103,16 +114,18 @@ const DiscussionManagement = () => {
         e.preventDefault();
         try {
             const response = await api.del(`https://www.iverolibros.xyz/api/respuestas/${replyId}`);
-
             if (response && response.err) {
-                alert(`Error al eliminar respuesta: ${response.err.statusText}`);
+                // Reemplazando `alert`
+                console.error(`Error al eliminar respuesta: ${response.err.statusText}`);
+                setSuccessMessage("Error al eliminar respuesta.");
             } else {
                 fetchRepliesByDiscussion(discussionId);
-                setSuccessMessage("✅ Respuesta eliminada con éxito");
+                setSuccessMessage("Respuesta eliminada con éxito");
             }
         } catch (error) {
             console.error("Error al eliminar respuesta:", error);
-            alert('Error de red al eliminar respuesta.');
+            // Reemplazando `alert`
+            setSuccessMessage('Error de red al eliminar respuesta.');
         }
     }, [api, fetchRepliesByDiscussion]);
 
@@ -121,16 +134,18 @@ const DiscussionManagement = () => {
         if (!selectedDiscusion) return;
         try {
             const response = await api.del(`https://www.iverolibros.xyz/api/respuestas/all/${selectedDiscusion.id}`);
-
             if (response && response.err) {
-                alert(`Error al eliminar todas las respuestas: ${response.err.statusText}`);
+                // Reemplazando `alert`
+                console.error(`Error al eliminar todas las respuestas: ${response.err.statusText}`);
+                setSuccessMessage("Error al eliminar todas las respuestas.");
             } else {
                 setReplies([]); // vaciamos las respuestas en frontend
                 setSuccessMessage("Todas las respuestas fueron eliminadas con éxito");
             }
         } catch (error) {
             console.error("Error al eliminar todas las respuestas:", error);
-            alert('Error de red al eliminar todas las respuestas.');
+            // Reemplazando `alert`
+            setSuccessMessage('Error de red al eliminar todas las respuestas.');
         }
     };
 
@@ -138,7 +153,7 @@ const DiscussionManagement = () => {
         { key: 'id', header: 'ID' },
         { key: 'titulo', header: 'Título' },
         { key: 'categoria', header: 'Categoria' },
-        { key: 'usuario_id', header: 'Usuario' },
+        { key: 'usuario_nombre', header: 'Usuario' },
     ];
 
     const discusionActions = [
@@ -174,7 +189,7 @@ const DiscussionManagement = () => {
                         actions={discusionActions}
                         loading={loadingDiscusiones}
                         error={errorDiscusiones}
-                        onRetry={fetchDiscusiones}
+                        onRetry={fetchDiscusionesAndUsers}
                         title="Discusiones"
                     />
                 </Card.Body>
