@@ -24,7 +24,7 @@ const RegisterPage = ({ setCurrentPage }) => {
     }
 
     try {
-      const url = 'http://localhost:8000/usuarios';
+      const url = 'https://www.iverolibros.xyz/api/usuarios';
       const userData = {
         nombre: name,
         apellido: lastName,

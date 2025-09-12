@@ -33,7 +33,7 @@ const BookManagement = ({ user }) => {
     const fetchBooks = useCallback(async () => {
         setLoadingBooks(true);
         try {
-            const response = await api.get('http://localhost:8000/libros');
+            const response = await api.get('https://www.iverolibros.xyz/api/libros');
             if (response.err) {
                 setErrorBooks(response.err.statusText || 'Error al cargar libros');
             } else {
@@ -50,7 +50,7 @@ const BookManagement = ({ user }) => {
 
     const fetchGenres = useCallback(async () => {
         try {
-            const response = await api.get('http://localhost:8000/genero');
+            const response = await api.get('https://www.iverolibros.xyz/api/genero');
             if (!response.err) {
                 setGenres(response);
             }
@@ -94,7 +94,7 @@ const BookManagement = ({ user }) => {
         setIsSubmitting(true);
         setMessage(null);
 
-        const url = 'http://localhost:8000/libros';
+        const url = 'https://www.iverolibros.xyz/api/libros';
 
         // Estructura los datos para que coincidan con lo que el backend espera
         const dataToSend = {
@@ -127,7 +127,7 @@ const BookManagement = ({ user }) => {
     const handleEditBook = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.put(`http://localhost:8000/libros/${editBookForm.id}`, { body: editBookForm });
+            const response = await api.put(`https://www.iverolibros.xyz/api/libros/${editBookForm.id}`, { body: editBookForm });
             if (response.err) {
                 alert(`Error al editar libro: ${response.err.statusText}`);
             } else {
@@ -143,7 +143,7 @@ const BookManagement = ({ user }) => {
     const handleDeleteBook = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.del(`http://localhost:8000/libros/${selectedBook.id}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/libros/${selectedBook.id}`);
             if (response.err) {
                 alert(`Error al eliminar libro: ${response.err.statusText}`);
             } else {

@@ -20,7 +20,7 @@ const UserManagement = () => {
     const fetchUsers = useCallback(async () => {
         setLoadingUsers(true);
         try {
-            const response = await api.get('http://localhost:8000/usuarios');
+            const response = await api.get('https://www.iverolibros.xyz/api/usuarios');
             if (response.err) {
                 setErrorUsers(response.err.statusText || 'Error al cargar usuarios');
             } else {
@@ -56,7 +56,7 @@ const UserManagement = () => {
                 bodyData.fechaSuscripcion = null;
             }
 
-            const response = await api.put(`http://localhost:8000/usuarios/${selectedUser.id}`, { body: bodyData });
+            const response = await api.put(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`, { body: bodyData });
             if (response.err) {
                 alert(`Error al editar usuario: ${response.err.statusText}`);
             } else {
@@ -72,7 +72,7 @@ const UserManagement = () => {
     const handleDeleteUser = useCallback(async (e) => {
         e.preventDefault();
         try {
-            const response = await api.del(`http://localhost:8000/usuarios/${selectedUser.id}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/usuarios/${selectedUser.id}`);
             if (response.err) {
                 alert(`Error al eliminar usuario: ${response.err.statusText}`);
             } else {

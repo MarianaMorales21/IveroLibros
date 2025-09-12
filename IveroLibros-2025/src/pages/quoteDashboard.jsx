@@ -15,7 +15,7 @@ const QuoteManagement = () => {
     const fetchQuote = useCallback(async () => {
         setLoadingQuote(true);
         try {
-            const response = await api.get('http://localhost:8000/frase');
+            const response = await api.get('https://www.iverolibros.xyz/api/frase');
             if (response.err) {
                 setErrorQuote(response.err.statusText || 'Error al cargar la cita');
             } else {
@@ -41,7 +41,7 @@ const QuoteManagement = () => {
     const handleEditQuote = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('http://localhost:8000/frase/update', {
+            const response = await api.post('https://www.iverolibros.xyz/api/frase/update', {
                 body: quoteData
             });
             if (response.err) {

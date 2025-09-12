@@ -28,7 +28,7 @@ const DiscussionManagement = () => {
     const fetchDiscusiones = useCallback(async () => {
         setLoadingDiscusiones(true);
         try {
-            const response = await api.get('http://localhost:8000/discusiones');
+            const response = await api.get('https://www.iverolibros.xyz/api/discusiones');
             if (response.err) {
                 setErrorDiscusiones(response.err.statusText || 'Error al cargar discusiones');
             } else {
@@ -47,7 +47,7 @@ const DiscussionManagement = () => {
         setLoadingReplies(true);
         setReplies([]); // Limpia las respuestas anteriores
         try {
-            const response = await api.get(`http://localhost:8000/respuestas/${discussionId}`);
+            const response = await api.get(`https://www.iverolibros.xyz/api/respuestas/${discussionId}`);
             if (response.err) {
                 setErrorReplies(response.err.statusText || 'Error al cargar respuestas');
             } else {
@@ -80,13 +80,13 @@ const DiscussionManagement = () => {
         if (!selectedDiscusion) return;
         try {
             // Check for replies first
-            const repliesResponse = await api.get(`http://localhost:8000/respuestas/${selectedDiscusion.id}`);
+            const repliesResponse = await api.get(`https://www.iverolibros.xyz/api/respuestas/${selectedDiscusion.id}`);
             if (repliesResponse && repliesResponse.length > 0) {
                 setDeleteModalMessage('No puedes eliminar esta discusión porque tiene respuestas asociadas. Por favor, borra las respuestas primero.');
                 return;
             }
 
-            const deleteResponse = await api.del(`http://localhost:8000/discusiones/${selectedDiscusion.id}`);
+            const deleteResponse = await api.del(`https://www.iverolibros.xyz/api/discusiones/${selectedDiscusion.id}`);
             if (deleteResponse.err) {
                 alert(`Error al eliminar discusión: ${deleteResponse.err.statusText}`);
             } else {
@@ -102,7 +102,7 @@ const DiscussionManagement = () => {
     const handleDeleteReply = useCallback(async (replyId, discussionId, e) => {
         e.preventDefault();
         try {
-            const response = await api.del(`http://localhost:8000/respuestas/${replyId}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/respuestas/${replyId}`);
 
             if (response && response.err) {
                 alert(`Error al eliminar respuesta: ${response.err.statusText}`);
@@ -120,7 +120,7 @@ const DiscussionManagement = () => {
         e.preventDefault();
         if (!selectedDiscusion) return;
         try {
-            const response = await api.del(`http://localhost:8000/respuestas/all/${selectedDiscusion.id}`);
+            const response = await api.del(`https://www.iverolibros.xyz/api/respuestas/all/${selectedDiscusion.id}`);
 
             if (response && response.err) {
                 alert(`Error al eliminar todas las respuestas: ${response.err.statusText}`);

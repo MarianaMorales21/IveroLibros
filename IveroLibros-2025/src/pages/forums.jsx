@@ -12,8 +12,8 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
   const [error, setError] = useState(null);
 
   const api = helpHttp();
-  const urlDiscussion = `http://localhost:8000/discusiones/${id}`;
-  const urlResponses = `http://localhost:8000/respuestas/${id}`;
+  const urlDiscussion = `https://www.iverolibros.xyz/api/discusiones/${id}`;
+  const urlResponses = `https://www.iverolibros.xyz/api/respuestas/${id}`;
 
   useEffect(() => {
     fetchDiscussion();
@@ -27,7 +27,7 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
       const discResponse = await api.get(urlDiscussion);
       if (!discResponse.err) {
         // obtener autor
-        const user = await api.get(`http://localhost:8000/usuarios/${discResponse.usuario_id}`);
+        const user = await api.get(`https://www.iverolibros.xyz/api/usuarios/${discResponse.usuario_id}`);
         const autor = user && !user.err ? `${user.nombre} ${user.apellido}` : 'Desconocido';
         setDiscussion({ ...discResponse, autor });
       } else {
@@ -48,7 +48,7 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
         // Enriquecer las respuestas con el autor
         const enrichedResponses = await Promise.all(
           resResponse.map(async (resp) => {
-            const respUser = await api.get(`http://localhost:8000/usuarios/${resp.usuario_id}`);
+            const respUser = await api.get(`https://www.iverolibros.xyz/api/usuarios/${resp.usuario_id}`);
             const respAutor = respUser && !respUser.err ? `${respUser.nombre} ${respUser.apellido}` : 'Desconocido';
             return {
               ...resp,
@@ -87,7 +87,7 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
 
     try {
       setSendingResponse(true);
-      const response = await api.post('http://localhost:8000/respuestas', {
+      const response = await api.post('https://www.iverolibros.xyz/api/respuestas', {
         body: {
           discusion_id: id,
           usuario_id: user.id, // ✅ Usamos el ID del usuario logueado
