@@ -13,7 +13,7 @@ class Genero
         $this->conn = $db;
     }
 
-    // Obtener todos los géneros
+
     public function getAll()
     {
         $query = "SELECT id, nombre, descripcion FROM " . $this->table;
@@ -21,7 +21,7 @@ class Genero
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener género por ID
+
     public function get($id)
     {
         $query = "SELECT id, nombre, descripcion FROM " . $this->table . " WHERE id = ?";

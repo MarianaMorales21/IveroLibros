@@ -8,13 +8,13 @@ class GeneroController {
         $this->genero = new Genero($db);
     }
 
-    // Obtener todos los géneros
+
     public function index() {
         $generos = $this->genero->getAll();
         echo json_encode($generos);
     }
 
-    // Obtener género por ID
+
     public function show($id) {
         $genero = $this->genero->get($id);
         if ($genero) {

@@ -1,5 +1,6 @@
 <?php
-class Respuesta {
+class Respuesta
+{
     private $conn;
     private $table = "respuestas";
 
@@ -9,20 +10,23 @@ class Respuesta {
     public $respuesta;
     public $hora;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    // Obtener todas las respuestas de una discusión
-    public function getAllByDiscussion($discusion_id) {
+
+    public function getAllByDiscussion($discusion_id)
+    {
         $query = "SELECT id, discusion_id, usuario_id, respuesta, hora FROM " . $this->table . " WHERE discusion_id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$discusion_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Crear nueva respuesta
-    public function create($data) {
+
+    public function create($data)
+    {
         $query = "INSERT INTO " . $this->table . " (discusion_id, usuario_id, respuesta, hora)
                   VALUES (:discusion_id, :usuario_id, :respuesta, :hora)";
         $stmt = $this->conn->prepare($query);
@@ -33,5 +37,16 @@ class Respuesta {
             ":hora" => date("Y-m-d H:i:s")
         ]);
         return $this->conn->lastInsertId();
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+
+    public function deleteAllByDiscussionId($discusionId) {
+        $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE discusion_id = ?");
+        return $stmt->execute([$discusionId]);
     }
 }

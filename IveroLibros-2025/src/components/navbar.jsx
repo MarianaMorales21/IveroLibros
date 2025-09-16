@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar, Nav, Container, Button, NavDropdown } from 'react-bootstrap';
 import { BiHome, BiBookOpen, BiGroup, BiStar, BiNews, BiTachometer, BiUser } from 'react-icons/bi';
 
-// Se agregan las props 'user', 'isLoggedIn' y 'handleLogout'
+
 const MyNavbar = ({ currentPage, setCurrentPage, isAdmin, user, isLoggedIn, handleLogout }) => {
   return (
     <Navbar expand="lg" className="py-3 shadow-sm navbar-color">
@@ -56,7 +56,7 @@ const MyNavbar = ({ currentPage, setCurrentPage, isAdmin, user, isLoggedIn, hand
                 className={`navbar-style ${currentPage === 'dashboard' ? 'active-link' : ''}`}
                 onClick={() => setCurrentPage('dashboard')}
               >
-                <BiTachometer className="me-1" /> Dashboard
+                <BiTachometer className="me-1" /> Panel de Control
               </Nav.Link>
             )}
           </Nav>

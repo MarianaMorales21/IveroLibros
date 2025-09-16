@@ -39,4 +39,16 @@ class DiscussionController
         http_response_code(201);
         echo json_encode(["message" => "Discusión creada", "id" => $id]);
     }
+
+
+    public function delete($id)
+    {
+        if ($this->discussion->delete($id)) {
+            http_response_code(200);
+            echo json_encode(["message" => "Discusión eliminada"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Error al eliminar la discusión."]);
+        }
+    }
 }

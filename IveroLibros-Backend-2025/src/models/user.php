@@ -1,5 +1,4 @@
 <?php
-// src/models/User.php
 class User
 {
     private $conn;
@@ -19,14 +18,14 @@ class User
         $this->conn = $db;
     }
 
-    // Obtener todos
+
     public function getAll()
     {
         $stmt = $this->conn->query("SELECT id, nombre, apellido, rol, suscripcion, fechaSuscripcion, email FROM " . $this->table);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener uno
+
     public function getById($id)
     {
         $stmt = $this->conn->prepare("SELECT id, nombre, apellido, rol, suscripcion, fechaSuscripcion, email FROM " . $this->table . " WHERE id = ?");
@@ -41,19 +40,19 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Crear
+
     public function create($data)
     {
-        // 1. Validar y formatear la fecha
+
         $fechaSuscripcion = null;
         if (!empty($data["fechaSuscripcion"])) {
             try {
-                // Crea un objeto DateTime a partir del formato ISO 8601
+
                 $dateObject = new DateTime($data["fechaSuscripcion"]);
-                // Formatea la fecha para el formato compatible con MySQL
+
                 $fechaSuscripcion = $dateObject->format('Y-m-d H:i:s');
             } catch (Exception $e) {
-                // Si la fecha es inválida, puedes manejar el error o dejarla como null
+
                 $fechaSuscripcion = null;
             }
         }
@@ -63,7 +62,7 @@ class User
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
 
-        // Encriptar la contraseña
+
         $hashedPassword = password_hash($data["contraseña"], PASSWORD_BCRYPT);
 
         $stmt->execute([
@@ -71,14 +70,14 @@ class User
             $data["apellido"],
             $data["rol"],
             $data["suscripcion"],
-            $fechaSuscripcion, // Usamos la variable formateada
+            $fechaSuscripcion, 
             $data["email"],
             $hashedPassword
         ]);
         return $this->conn->lastInsertId();
     }
 
-    // Actualizar
+
     public function update($id, $data)
     {
         $sql = "UPDATE " . $this->table . " 
@@ -93,7 +92,7 @@ class User
             $data["email"]
         ];
 
-        // Si se envía contraseña, se actualiza
+
         if (!empty($data["contraseña"])) {
             $sql .= ", contraseña=?";
             $params[] = password_hash($data["contraseña"], PASSWORD_BCRYPT);
@@ -106,7 +105,7 @@ class User
         return $stmt->execute($params);
     }
 
-    // Eliminar
+
     public function delete($id)
     {
         $stmt = $this->conn->prepare("DELETE FROM " . $this->table . " WHERE id = ?");

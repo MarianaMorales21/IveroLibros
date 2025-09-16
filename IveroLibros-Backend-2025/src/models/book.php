@@ -16,17 +16,22 @@ class Libro
     public $portada;
     public $descripcion;
     public $usuario_id;
-    public $estado; // Nuevo campo
+    public $estado; 
 
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
+    public function getDb()
+    {
+        return $this->conn;
+    }
+
     // Obtener todos los libros
     public function getAll()
     {
-        // Se agregaron los nuevos campos 'estado' y 'id' en el SELECT para que coincidan con la base de datos y el frontend
+       
         $query = "SELECT 
                 id, 
                 titulo, 
@@ -47,10 +52,10 @@ class Libro
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener libro por ID
+
     public function get($id)
     {
-        // Se agregó el campo 'estado' al SELECT
+
         $query = "SELECT id, titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id, estado FROM " . $this->table . " WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$id]);
@@ -60,14 +65,14 @@ class Libro
     // Crear nuevo libro
     public function create($data)
     {
-        // Se agregaron 'estado' a la lista de columnas y al final del array de valores para la inserción
+
         $query = "INSERT INTO " . $this->table . " 
     (titulo, autor, año, genero_id, editorial, paginas, sinopsis, linkCompra, portada, descripcion, usuario_id, estado) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // Using positional placeholders
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; 
 
         $stmt = $this->conn->prepare($query);
 
-        // The execute method takes an array of values in the same order as the placeholders
+
         return $stmt->execute([
             $data['titulo'],
             $data['autor'],
@@ -80,14 +85,13 @@ class Libro
             $data['portada'],
             $data['descripcion'],
             $data['usuario_id'],
-            $data['estado'] // Nuevo valor
+            $data['estado'] 
         ]);
     }
 
     // Actualizar un libro
     public function update($id, $data)
     {
-        // Se agregó el campo 'estado' en el SET de la consulta
         $query = "UPDATE " . $this->table . " SET 
         titulo = ?, 
         autor = ?, 
@@ -115,8 +119,8 @@ class Libro
             $data['portada'],
             $data['descripcion'],
             $data['usuario_id'],
-            $data['estado'], // Nuevo valor
-            $id // The ID is the last parameter
+            $data['estado'], 
+            $id 
         ];
 
         $stmt = $this->conn->prepare($query);

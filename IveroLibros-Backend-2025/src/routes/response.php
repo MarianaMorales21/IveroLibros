@@ -5,7 +5,6 @@ $respuestaController = new RespuestaController($db);
 
 switch ($method) {
     case "GET":
-        // Se espera: /respuestas/{discusion_id}
         if (!isset($uri[1])) {
             http_response_code(400);
             echo json_encode(["error" => "Falta ID de discusión"]);
@@ -17,6 +16,22 @@ switch ($method) {
     case "POST":
         $data = json_decode(file_get_contents("php://input"), true);
         $respuestaController->store($data);
+        break;
+
+    case "DELETE":
+
+        if (isset($uri[1]) && $uri[1] === 'all' && isset($uri[2])) {
+
+            $discussionId = $uri[2];
+            $respuestaController->deleteAllByDiscussion($discussionId);
+        } elseif (isset($uri[1])) {
+
+            $responseId = $uri[1];
+            $respuestaController->delete($responseId);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "ID de la respuesta o acción de eliminación no especificada."]);
+        }
         break;
 
     default:
