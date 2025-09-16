@@ -181,9 +181,12 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
             />
           </Form.Group>
           <div className="text-end">
-            <Button variant="primary" type="submit" className="btn-send-response" disabled={sendingResponse || !user}>
+            <Button variant="primary" type="submit" className="btn-send-response " disabled={sendingResponse || !user}>
               {sendingResponse ? 'Enviando...' : 'Enviar respuesta »'}
             </Button>
+            <Button variant="outline-primary" className='margin-left-button margin-button' onClick={() => setCurrentPage('forums')}>
+            Volver al foro
+          </Button>
           </div>
           {!user && (
             <p className="text-danger mt-2">Debes iniciar sesión para poder responder.</p>
@@ -209,11 +212,6 @@ const Forums = ({ setCurrentPage, pageProps, user }) => {
           </div>
         )}
 
-        <div className="mt-4">
-          <Button variant="outline-primary" onClick={() => setCurrentPage('forums')}>
-            Volver al foro
-          </Button>
-        </div>
       </Container>
     </div>
   );

@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import MyNavbar from './components/navbar';
 import Footer from './components/footer';
-import HomePage from './pages/homePage';
-import ForumsPage from './pages/forumsPage';
-import CreatePostPage from './pages/createPost';
-import RegisterPage from './pages/registerPage';
-import LoginPage from './pages/loginPage';
-import FeaturedBooksPage from './pages/booksFeature';
-import BookDetailsPage from './pages/booksDetails';
-import Forums from './pages/forums';
-import AdminDashboard from './pages/dashboardPage';
-import PromoteBookPage from './pages/promotionBookPage';
-import ForgotPasswordPage from './pages/forgotPassword';
-import ResetPasswordPage from './pages/resetPassword';
+import { Spinner } from 'react-bootstrap';
+
+// 🚀 Uso de React.lazy para la carga dinámica de componentes
+const HomePage = lazy(() => import('./pages/homePage'));
+const ForumsPage = lazy(() => import('./pages/forumsPage'));
+const CreatePostPage = lazy(() => import('./pages/createPost'));
+const RegisterPage = lazy(() => import('./pages/registerPage'));
+const LoginPage = lazy(() => import('./pages/loginPage'));
+const FeaturedBooksPage = lazy(() => import('./pages/booksFeature'));
+const BookDetailsPage = lazy(() => import('./pages/booksDetails'));
+const Forums = lazy(() => import('./pages/forums'));
+const AdminDashboard = lazy(() => import('./pages/dashboardPage'));
+const PromoteBookPage = lazy(() => import('./pages/promotionBookPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/forgotPassword'));
+const ResetPasswordPage = lazy(() => import('./pages/resetPassword'));
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -23,8 +26,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // 🔹 Al montar la App, revisamos si hay usuario guardado en localStorage
-  // 🔹 y manejamos la ruta de restablecimiento de contraseña desde la URL
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -33,20 +34,16 @@ function App() {
       setIsLoggedIn(true);
     }
 
-    // ➡️ Lógica para leer la URL y actualizar el estado
     const path = window.location.pathname;
     if (path === '/reset-password') {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
-      // Si la URL es /reset-password y tiene un token, navegamos a esa página
       if (token) {
         setCurrentPage('reset-password');
       } else {
-        // Si no hay token, volvemos a la página de inicio para evitar errores
         setCurrentPage('home');
       }
     }
-    // Si no es la ruta de restablecer contraseña, no hacemos nada y el estado inicial ('home') se mantiene
   }, []);
 
   const handleSetCurrentPage = (pageName, props = {}) => {
@@ -57,20 +54,14 @@ function App() {
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
-
-    // 🔹 Guardar usuario en localStorage
     localStorage.setItem('user', JSON.stringify({ user: userData }));
-
     handleSetCurrentPage('home');
   };
 
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
-
-    // 🔹 Eliminar sesión de localStorage
     localStorage.removeItem('user');
-
     handleSetCurrentPage('home');
   };
 
@@ -139,7 +130,17 @@ function App() {
         isLoggedIn={isLoggedIn}
         handleLogout={handleLogout}
       />
-      {renderPage()}
+      <Suspense fallback={      
+        <div className="forums-page py-5 d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando ...</span>
+          </Spinner>
+          <p className="mt-2">Cargando ...</p>
+        </div>
+      </div>}>
+        {renderPage()}
+      </Suspense>
       <Footer setCurrentPage={handleSetCurrentPage} />
     </div>
   );

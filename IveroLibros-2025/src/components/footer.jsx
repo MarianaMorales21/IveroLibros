@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = ({ setCurrentPage, }) => {
   return (
@@ -19,9 +19,9 @@ const Footer = ({ setCurrentPage, }) => {
               />
             </div>
             <div className="mt-3">
-              <a href="#" className="text-white me-3"><FontAwesomeIcon icon={faFacebook} size="lg" /></a>
-              <a href="#" className="text-white me-3"><FontAwesomeIcon icon={faTwitter} size="lg" /></a>
-              <a href="#" className="text-white"><FontAwesomeIcon icon={faInstagram} size="lg" /></a>
+              <a onClick={() => window.open("https://www.facebook.com/iverolibros/")} className="text-white me-3"><FontAwesomeIcon icon={faFacebook} size="lg" /></a>
+              <a onClick={() => window.open("https://www.instagram.com/iverolibros/")} className="text-white"><FontAwesomeIcon icon={faInstagram} size="lg" /></a>
+              <a onClick={() => window.open("http://tiktok.com/@iverolibros.xyz")} className="text-white ms-3"><FontAwesomeIcon icon={faTiktok} size="lg" /></a>
             </div>
           </Col>
           <Col md={9}>

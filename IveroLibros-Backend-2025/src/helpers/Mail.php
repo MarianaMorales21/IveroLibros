@@ -13,28 +13,25 @@ class Mailer {
         $this->mail = new PHPMailer(true);
 
         try {
-            // Configuración del servidor SMTP
+
             $this->mail->isSMTP();
-            $this->mail->Host       = 'smtp.gmail.com';  // Cambia si usas otro servidor
+            $this->mail->Host       = 'smtp.gmail.com';  
             $this->mail->SMTPAuth   = true;
-            $this->mail->Username   = 'marianamorales2110@gmail.com'; // 👉 tu correo
-            $this->mail->Password   = 'ngek yynl xnpc svuv';     // 👉 App Password, no tu clave normal
+            $this->mail->Username   = 'ivero.libros.net@gmail.com'; 
+            $this->mail->Password   = 'hfwfcadchrofhihr';     
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mail->Port       = 587;
 
-            // Remitente por defecto
-            $this->mail->setFrom('marianamorales2110@gmail.com', 'IveroLibros');
+
+            $this->mail->setFrom('ivero.libros.net@gmail.com', 'IveroLibros');
         } catch (Exception $e) {
             error_log("Error inicializando PHPMailer: " . $e->getMessage());
         }
     }
 
-    /**
-     * Enviar correo
-     */
     public function enviar($destinatario, $asunto, $mensajeHtml, $mensajeTexto = '') {
         try {
-            $this->mail->clearAddresses(); // Limpia destinatarios previos
+            $this->mail->clearAddresses(); 
             $this->mail->addAddress($destinatario);
 
             $this->mail->isHTML(true);

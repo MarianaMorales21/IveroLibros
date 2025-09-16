@@ -76,6 +76,12 @@ body {
   margin-bottom: 5px;
 }
 
+.margin-left-button{
+  margin-left: 10px;
+}
+
+
+
 
 .btn-primary:hover {
   background-color: #6d3205ff !important;
@@ -504,5 +510,9 @@ body {
 
   .margin-button-dashboard{
     margin-bottom: 5px;
+  }
+
+  .margin-left-button{
+    margin-top: 10px;
   }
 }

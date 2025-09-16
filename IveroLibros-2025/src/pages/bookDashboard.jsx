@@ -190,7 +190,6 @@ const BookManagement = ({ user }) => {
             }, variant: 'danger'
         },
     ];
-    console.log(editBookForm)
     return (
         <>
             <Card className="shadow-sm mt-3">
